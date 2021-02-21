@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<LogViewerData MRUConnStringName="DMS (local)">
+	<DbConns>
+		<DbConn Name="PD (local)" ServerName="localhost" DatabaseName="PD" IsIntegratedSecurity="false" Username="PD_User" Password="P@ssword1" />	</DbConns>
+</LogViewerData>

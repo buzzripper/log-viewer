@@ -22,7 +22,8 @@ namespace ProData.Infrastructure.LogViewer
 		private const string COL_LEVELVALUE = "LevelValue";
 		private const string COL_APPID = "AppId";
         private const string COL_SRCCONTEXT = "SourceContext";
-		private const string COL_USERNAME = "UserName";
+		private const string COL_MACHINENAME = "MachineName";
+        private const string COL_USERNAME = "UserName";
 		private const string COL_CORRID = "CorrelationId";
 		private const string COL_MSG = "Message";
 		private const string COL_EX = "Exception";
@@ -353,6 +354,8 @@ namespace ProData.Infrastructure.LogViewer
 										{COL_APPID}, 
 										{COL_SRCCONTEXT}, 
 										{COL_USERNAME}, 
+										{COL_MACHINENAME}, 
+                                        {COL_CORRID}, 
 										{COL_MSG},
 										CASE WHEN {COL_EX} = '' THEN 0 ELSE 1 END AS {COL_HASEX},
 										ROW_NUMBER() OVER (ORDER BY {COL_TIMESTAMP} DESC) AS RowNum
@@ -400,9 +403,11 @@ namespace ProData.Infrastructure.LogViewer
 							RowId = (Guid)reader[COL_ROWID],
 							TimeStamp = ((DateTime)reader[COL_TIMESTAMP]).ToLocalTime(),
 							LevelValue = (int)reader[COL_LEVELVALUE],
-							ApplicationName = reader[COL_APPID].ToString(),
+							AppId = reader[COL_APPID].ToString(),
                             SourceContext = reader[COL_SRCCONTEXT].ToString(),
-							UserName = reader[COL_USERNAME].ToString(),
+							MachineName = reader[COL_MACHINENAME].ToString(),
+                            UserName = reader[COL_USERNAME].ToString(),
+                            CorrelationId = reader[COL_CORRID].ToString(),
 							Message = reader[COL_MSG].ToString(),
 							HasException = ((int)reader[COL_HASEX] == 1)
 						};
@@ -410,7 +415,7 @@ namespace ProData.Infrastructure.LogViewer
 						var timestampStr = logItem.TimeStamp.Date == DateTime.Now.Date ? logItem.TimeStamp.ToString("h:mm:ss.fff") : logItem.TimeStamp.ToString("h:mm:ss.fff M/d/yy");
 						var errLevelDisplay = _errorLevelDisplays[logItem.LevelValue];
 
-						ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.ApplicationName, logItem.SourceContext, logItem.UserName, logItem.Message });
+						ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.AppId, logItem.SourceContext, logItem.UserName, logItem.Message });
 						lvItem.ImageIndex = errLevelDisplay.ImageIndex;
 						lvItem.ForeColor = errLevelDisplay.TextColor;
 						lvItem.ToolTipText = logItem.TimeStamp.ToString("M/d/yy");

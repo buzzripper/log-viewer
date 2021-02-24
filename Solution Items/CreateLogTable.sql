@@ -30,6 +30,7 @@ CREATE TABLE [Logs](
 	[AppId] [varchar](50) NULL,
 	[SourceContext] [varchar](500) NULL,
 	[UserName] [varchar](50) NULL,
+	[MachineName] [varchar](100) NULL,
 	[CorrelationId] [varchar](50) NULL,
 	[Message] [nvarchar](max) NULL,
 	[Exception] [nvarchar](max) NULL,

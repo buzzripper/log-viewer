@@ -35,9 +35,10 @@ namespace ProData.Infrastructure.LogViewer
 				lblRowId.Text = logItem.RowId.ToString();
 				lblTimestamp.Text = logItem.TimeStamp.ToString(CultureInfo.InvariantCulture);
 				lblSeverity.Text = logItem.LevelValue.ToString();
-				lblMachineName.Text = logItem.ApplicationName;
-				lblModuleName.Text = logItem.UserName;
-				lblLogSource.Text = logItem.SourceContext;
+                lblSourceContext.Text = logItem.SourceContext;
+                lblAppId.Text = logItem.AppId;
+                lblMachineName.Text = logItem.MachineName;
+				lblUserName.Text = logItem.UserName;
 				txtMessage.Text = logItem.Message;
 				if (!string.IsNullOrWhiteSpace(logItem.Exception))
 				{

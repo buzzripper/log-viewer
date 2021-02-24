@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Windows.Forms;
 
-namespace Liazon.Common.LogViewer
+namespace ProData.Infrastructure.LogViewer
 {
 	public partial class DetailForm : Form
 	{
+        private const int BottomOffset = 85;
+
 		private readonly Form1 _mainForm;
-		private bool _showingException;
 
 		public DetailForm(Form form1)
 			: this()
@@ -23,7 +25,6 @@ namespace Liazon.Common.LogViewer
 
 		private void DetailForm_Load(object sender, EventArgs e)
 		{
-			//ShowException(!_showingException);
 		}
 
 		public void ShowLog(LogItem logItem)
@@ -32,7 +33,7 @@ namespace Liazon.Common.LogViewer
 			try
 			{
 				lblRowId.Text = logItem.RowId.ToString();
-				lblTimestamp.Text = logItem.TimeStamp.ToString();
+				lblTimestamp.Text = logItem.TimeStamp.ToString(CultureInfo.InvariantCulture);
 				lblSeverity.Text = logItem.LevelValue.ToString();
 				lblMachineName.Text = logItem.ApplicationName;
 				lblModuleName.Text = logItem.UserName;
@@ -84,15 +85,11 @@ namespace Liazon.Common.LogViewer
 				ShowLog(logItem);
 		}
 
-		private const int BOTTOM_OFFSET = 85;
-
 		private void ShowException(bool showException)
 		{
-			_showingException = showException;
-
 			if (showException)
 			{
-				txtMessage.Height = ((this.Height - txtMessage.Top - BOTTOM_OFFSET) / 2);
+				txtMessage.Height = ((this.Height - txtMessage.Top - BottomOffset) / 2);
 				txtMessage.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 				txtException.Top = txtMessage.Top + txtMessage.Height + 15;
 				txtException.Height = txtMessage.Height;
@@ -100,12 +97,11 @@ namespace Liazon.Common.LogViewer
 				lblException.Top = txtMessage.Top + txtMessage.Height + 5;
 				txtException.Visible = true;
 				lblException.Visible = true;
-
 			}
 			else
 			{
 				txtMessage.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-				txtMessage.Height = this.Height - txtMessage.Top - BOTTOM_OFFSET;
+				txtMessage.Height = this.Height - txtMessage.Top - BottomOffset;
 				txtException.Visible = false;
 				lblException.Visible = false;
 			}

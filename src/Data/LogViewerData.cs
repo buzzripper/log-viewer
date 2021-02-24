@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Liazon.Common.LogViewer.Data
+namespace ProData.Infrastructure.LogViewer.Data
 {
 	[Serializable]
 	public class LogViewerData

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Liazon.Common.LogViewer
+namespace ProData.Infrastructure.LogViewer
 {
     internal static class Program
     {

@@ -24,11 +24,12 @@ ALTER ROLE [db_owner] ADD MEMBER [LogAdmin];
 */
 
 CREATE TABLE [Logs](
-	[TimeStampUTC] [datetime] NULL,
+	[TimeStamp] [datetime] NULL,
 	[Level] [nvarchar](12) NULL,
 	[LevelValue] [int] NULL,
-	[ApplicationName] [varchar](100) NULL,
+	[AppId] [varchar](100) NULL,
 	[SourceContext] [varchar](500) NULL,
+	[SourceClass] [varchar](100) NULL,
 	[UserName] [varchar](50) NULL,
 	[CorrelationId] [varchar](50) NULL,
 	[Message] [nvarchar](max) NULL,
@@ -39,7 +40,7 @@ GO
 
 ALTER TABLE [dbo].[Logs] ADD  CONSTRAINT [DF_Logs_RowId]  DEFAULT (newid()) FOR [RowId]
 
-CREATE INDEX IX_TimeStamp ON Logs (TimeStampUTC);
-CREATE INDEX IX_Level ON Logs (Level);
-CREATE INDEX IX_ApplicationName ON Logs (ApplicationName);
+CREATE INDEX IX_TimeStamp ON Logs (TimeStamp);
+CREATE INDEX IX_LevelValue ON Logs (LevelValue);
+CREATE INDEX IX_AppId ON Logs (AppId);
 GO

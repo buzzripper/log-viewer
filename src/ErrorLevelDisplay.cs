@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Liazon.Common.LogViewer
+namespace ProData.Infrastructure.LogViewer
 {
 	public class ErrorLevelDisplay
 	{

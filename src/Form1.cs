@@ -8,20 +8,21 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
-using Liazon.Common.LogViewer.Data;
-using Liazon.Common.LogViewer.Properties;
+using ProData.Infrastructure.LogViewer.Data;
+using ProData.Infrastructure.LogViewer.Properties;
 
-namespace Liazon.Common.LogViewer
+namespace ProData.Infrastructure.LogViewer
 {
 	public partial class Form1 : Form
 	{
 		#region Constants
 
 		private const string TABLE_NAME = "Logs";
-		private const string COL_TIMESTAMP = "TimeStampUTC";
+		private const string COL_TIMESTAMP = "TimeStamp";
 		private const string COL_LEVELVALUE = "LevelValue";
-		private const string COL_APPNAME = "ApplicationName";
-		private const string COL_SRCCONTEXT = "SourceContext";
+		private const string COL_APPID = "AppId";
+        private const string COL_SRCCONTEXT = "SourceContext";
+        private const string COL_SRCCLASS = "SourceClass";
 		private const string COL_USERNAME = "UserName";
 		private const string COL_CORRID = "CorrelationId";
 		private const string COL_MSG = "Message";
@@ -196,9 +197,8 @@ namespace Liazon.Common.LogViewer
 			} else {
 				var width = lvLogs.Width - 22;
 				for (var i = 0; i < 5; i++)
-					width += lvLogs.Columns[i].Width;
+					width -= lvLogs.Columns[i].Width;
 				lvLogs.Columns[5].Width = width;
-				//lvLogs.Columns[5].Width = lvLogs.Width - lvLogs.Columns[0].Width - lvLogs.Columns[1].Width - lvLogs.Columns[2].Width - lvLogs.Columns[3].Width - 22;
 			}
 		}
 
@@ -351,8 +351,9 @@ namespace Liazon.Common.LogViewer
 	                                    {COL_ROWID}, 
 										{COL_TIMESTAMP}, 
 										{COL_LEVELVALUE}, 
-										{COL_APPNAME}, 
+										{COL_APPID}, 
 										{COL_SRCCONTEXT}, 
+										{COL_SRCCLASS}, 
 										{COL_USERNAME}, 
 										{COL_MSG},
 										CASE WHEN {COL_EX} = '' THEN 0 ELSE 1 END AS {COL_HASEX},
@@ -401,8 +402,9 @@ namespace Liazon.Common.LogViewer
 							RowId = (Guid)reader[COL_ROWID],
 							TimeStamp = ((DateTime)reader[COL_TIMESTAMP]).ToLocalTime(),
 							LevelValue = (int)reader[COL_LEVELVALUE],
-							ApplicationName = reader[COL_APPNAME].ToString(),
-							SourceContext = reader[COL_SRCCONTEXT].ToString(),
+							ApplicationName = reader[COL_APPID].ToString(),
+                            SourceContext = reader[COL_SRCCONTEXT].ToString(),
+							SourceClass = reader[COL_SRCCLASS].ToString(),
 							UserName = reader[COL_USERNAME].ToString(),
 							Message = reader[COL_MSG].ToString(),
 							HasException = ((int)reader[COL_HASEX] == 1)
@@ -411,7 +413,7 @@ namespace Liazon.Common.LogViewer
 						var timestampStr = logItem.TimeStamp.Date == DateTime.Now.Date ? logItem.TimeStamp.ToString("h:mm:ss.fff") : logItem.TimeStamp.ToString("h:mm:ss.fff M/d/yy");
 						var errLevelDisplay = _errorLevelDisplays[logItem.LevelValue];
 
-						ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.ApplicationName, logItem.SourceContext, logItem.UserName, logItem.Message });
+						ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.ApplicationName, logItem.SourceClass, logItem.UserName, logItem.Message });
 						lvItem.ImageIndex = errLevelDisplay.ImageIndex;
 						lvItem.ForeColor = errLevelDisplay.TextColor;
 						lvItem.ToolTipText = logItem.TimeStamp.ToString("M/d/yy");
@@ -482,12 +484,12 @@ namespace Liazon.Common.LogViewer
 
 			// Machine
 			if (cmbApplicationNames.SelectedIndex > 0) {
-				whereList.Add($"{COL_APPNAME} = '{cmbApplicationNames.Text}' ");
+				whereList.Add($"{COL_APPID} = '{cmbApplicationNames.Text}' ");
 			}
 
-			// LogSource
+			// SourceClass
 			if (!string.IsNullOrEmpty(txtSource.Text)) {
-				whereList.Add($"{COL_SRCCONTEXT} LIKE '%{txtSource.Text}%' ");
+				whereList.Add($"{COL_SRCCLASS} LIKE '%{txtSource.Text}%' ");
 			}
 
 			// Message
@@ -767,10 +769,10 @@ namespace Liazon.Common.LogViewer
 					using (SqlCommand cmd = new SqlCommand()) {
 						cmd.Connection = conn;
 						cmd.CommandType = CommandType.Text;
-						cmd.CommandText = $"SELECT DISTINCT {COL_APPNAME} FROM {TABLE_NAME}";
+						cmd.CommandText = $"SELECT DISTINCT {COL_APPID} FROM {TABLE_NAME}";
 						using (SqlDataReader reader = cmd.ExecuteReader()) {
 							while (reader.Read()) {
-								string appName = reader[COL_APPNAME].ToString();
+								string appName = reader[COL_APPID].ToString();
 								if (!cmbApplicationNames.Items.Contains(appName))
 									cmbApplicationNames.Items.Add(appName);
 							}

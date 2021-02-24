@@ -1,4 +1,4 @@
-﻿namespace Liazon.Common.LogViewer
+﻿namespace ProData.Infrastructure.LogViewer
 {
     partial class DatasourceForm
     {

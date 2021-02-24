@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Liazon.Common.LogViewer
+namespace ProData.Infrastructure.LogViewer
 {
     public static class XmlTools
     {

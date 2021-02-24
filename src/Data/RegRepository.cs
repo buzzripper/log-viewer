@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
 
-namespace Liazon.Common.LogViewer.Data
+namespace ProData.Infrastructure.LogViewer.Data
 {
 	public class RegRepository
 	{

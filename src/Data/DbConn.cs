@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Liazon.Common.LogViewer.Data
+namespace ProData.Infrastructure.LogViewer.Data
 {
     [Serializable]
     public class DbConn

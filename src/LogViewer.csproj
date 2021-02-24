@@ -8,7 +8,7 @@
     <ProjectGuid>{FBE48F1A-F683-4ECE-8C16-58F3E9A3356E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Liazon.Common.LogViewer</RootNamespace>
+    <RootNamespace>ProData.Infrastructure.LogViewer</RootNamespace>
     <AssemblyName>LogViewer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

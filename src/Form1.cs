@@ -22,7 +22,6 @@ namespace ProData.Infrastructure.LogViewer
 		private const string COL_LEVELVALUE = "LevelValue";
 		private const string COL_APPID = "AppId";
         private const string COL_SRCCONTEXT = "SourceContext";
-        private const string COL_SRCCLASS = "SourceClass";
 		private const string COL_USERNAME = "UserName";
 		private const string COL_CORRID = "CorrelationId";
 		private const string COL_MSG = "Message";
@@ -353,7 +352,6 @@ namespace ProData.Infrastructure.LogViewer
 										{COL_LEVELVALUE}, 
 										{COL_APPID}, 
 										{COL_SRCCONTEXT}, 
-										{COL_SRCCLASS}, 
 										{COL_USERNAME}, 
 										{COL_MSG},
 										CASE WHEN {COL_EX} = '' THEN 0 ELSE 1 END AS {COL_HASEX},
@@ -404,7 +402,6 @@ namespace ProData.Infrastructure.LogViewer
 							LevelValue = (int)reader[COL_LEVELVALUE],
 							ApplicationName = reader[COL_APPID].ToString(),
                             SourceContext = reader[COL_SRCCONTEXT].ToString(),
-							SourceClass = reader[COL_SRCCLASS].ToString(),
 							UserName = reader[COL_USERNAME].ToString(),
 							Message = reader[COL_MSG].ToString(),
 							HasException = ((int)reader[COL_HASEX] == 1)
@@ -413,7 +410,7 @@ namespace ProData.Infrastructure.LogViewer
 						var timestampStr = logItem.TimeStamp.Date == DateTime.Now.Date ? logItem.TimeStamp.ToString("h:mm:ss.fff") : logItem.TimeStamp.ToString("h:mm:ss.fff M/d/yy");
 						var errLevelDisplay = _errorLevelDisplays[logItem.LevelValue];
 
-						ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.ApplicationName, logItem.SourceClass, logItem.UserName, logItem.Message });
+						ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.ApplicationName, logItem.SourceContext, logItem.UserName, logItem.Message });
 						lvItem.ImageIndex = errLevelDisplay.ImageIndex;
 						lvItem.ForeColor = errLevelDisplay.TextColor;
 						lvItem.ToolTipText = logItem.TimeStamp.ToString("M/d/yy");
@@ -489,7 +486,7 @@ namespace ProData.Infrastructure.LogViewer
 
 			// SourceClass
 			if (!string.IsNullOrEmpty(txtSource.Text)) {
-				whereList.Add($"{COL_SRCCLASS} LIKE '%{txtSource.Text}%' ");
+				whereList.Add($"{COL_SRCCONTEXT} LIKE '%{txtSource.Text}%' ");
 			}
 
 			// Message
@@ -598,7 +595,7 @@ namespace ProData.Infrastructure.LogViewer
 				}
 
 			} catch (Exception ex) {
-				MessageBox.Show(string.Format("(btnAddDatasource_Click) {0}: {1}", ex.GetType().Name, ex.Message));
+				MessageBox.Show($@"(btnAddDatasource_Click) {ex.GetType().Name}: {ex.Message}");
 			}
 		}
 

@@ -56,8 +56,7 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(48, 10);
+            this.label1.Location = new System.Drawing.Point(35, 5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 22);
             this.label1.TabIndex = 1;
@@ -69,7 +68,7 @@
             this.lblRowId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblRowId.AutoSize = true;
-            this.lblRowId.Location = new System.Drawing.Point(127, 10);
+            this.lblRowId.Location = new System.Drawing.Point(115, 7);
             this.lblRowId.Name = "lblRowId";
             this.lblRowId.Size = new System.Drawing.Size(78, 22);
             this.lblRowId.TabIndex = 2;
@@ -80,7 +79,7 @@
             this.lblTimestamp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTimestamp.AutoSize = true;
-            this.lblTimestamp.Location = new System.Drawing.Point(127, 29);
+            this.lblTimestamp.Location = new System.Drawing.Point(115, 32);
             this.lblTimestamp.Name = "lblTimestamp";
             this.lblTimestamp.Size = new System.Drawing.Size(116, 22);
             this.lblTimestamp.TabIndex = 4;
@@ -88,8 +87,7 @@
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 29);
+            this.label3.Location = new System.Drawing.Point(5, 27);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(103, 22);
             this.label3.TabIndex = 3;
@@ -101,7 +99,7 @@
             this.lblSeverity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblSeverity.AutoSize = true;
-            this.lblSeverity.Location = new System.Drawing.Point(127, 48);
+            this.lblSeverity.Location = new System.Drawing.Point(115, 54);
             this.lblSeverity.Name = "lblSeverity";
             this.lblSeverity.Size = new System.Drawing.Size(93, 22);
             this.lblSeverity.TabIndex = 6;
@@ -109,8 +107,7 @@
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(41, 48);
+            this.label4.Location = new System.Drawing.Point(28, 49);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(80, 22);
             this.label4.TabIndex = 5;
@@ -120,7 +117,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(22, 152);
+            this.label5.Location = new System.Drawing.Point(22, 156);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(87, 22);
             this.label5.TabIndex = 7;
@@ -134,12 +131,12 @@
             this.txtMessage.BackColor = System.Drawing.SystemColors.Control;
             this.txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMessage.Location = new System.Drawing.Point(89, 154);
+            this.txtMessage.Location = new System.Drawing.Point(22, 181);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.ReadOnly = true;
             this.txtMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtMessage.Size = new System.Drawing.Size(719, 155);
+            this.txtMessage.Size = new System.Drawing.Size(865, 140);
             this.txtMessage.TabIndex = 8;
             // 
             // button1
@@ -148,7 +145,7 @@
             this.button1.BackColor = System.Drawing.Color.Transparent;
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.Image = global::ProData.Infrastructure.LogViewer.Properties.Resources.down_arrow;
-            this.button1.Location = new System.Drawing.Point(793, 35);
+            this.button1.Location = new System.Drawing.Point(872, 35);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(28, 28);
             this.button1.TabIndex = 10;
@@ -161,7 +158,7 @@
             this.btnUp.BackColor = System.Drawing.Color.Transparent;
             this.btnUp.FlatAppearance.BorderSize = 0;
             this.btnUp.Image = global::ProData.Infrastructure.LogViewer.Properties.Resources.up_arrow;
-            this.btnUp.Location = new System.Drawing.Point(793, 4);
+            this.btnUp.Location = new System.Drawing.Point(872, 4);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(28, 28);
             this.btnUp.TabIndex = 9;
@@ -173,7 +170,7 @@
             this.lblLogSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblLogSource.AutoSize = true;
-            this.lblLogSource.Location = new System.Drawing.Point(127, 106);
+            this.lblLogSource.Location = new System.Drawing.Point(116, 120);
             this.lblLogSource.Name = "lblLogSource";
             this.lblLogSource.Size = new System.Drawing.Size(115, 22);
             this.lblLogSource.TabIndex = 16;
@@ -181,8 +178,7 @@
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(49, 106);
+            this.label6.Location = new System.Drawing.Point(36, 115);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(72, 22);
             this.label6.TabIndex = 15;
@@ -194,7 +190,7 @@
             this.lblModuleName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblModuleName.AutoSize = true;
-            this.lblModuleName.Location = new System.Drawing.Point(127, 86);
+            this.lblModuleName.Location = new System.Drawing.Point(115, 98);
             this.lblModuleName.Name = "lblModuleName";
             this.lblModuleName.Size = new System.Drawing.Size(113, 22);
             this.lblModuleName.TabIndex = 14;
@@ -202,8 +198,7 @@
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(68, 84);
+            this.label8.Location = new System.Drawing.Point(55, 93);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 22);
             this.label8.TabIndex = 13;
@@ -215,7 +210,7 @@
             this.lblMachineName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMachineName.AutoSize = true;
-            this.lblMachineName.Location = new System.Drawing.Point(127, 67);
+            this.lblMachineName.Location = new System.Drawing.Point(115, 76);
             this.lblMachineName.Name = "lblMachineName";
             this.lblMachineName.Size = new System.Drawing.Size(142, 22);
             this.lblMachineName.TabIndex = 12;
@@ -223,20 +218,19 @@
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(39, 67);
+            this.label10.Location = new System.Drawing.Point(26, 71);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(82, 22);
             this.label10.TabIndex = 11;
-            this.label10.Text = "Machine:";
+            this.label10.Text = "Source:";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 518);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 533);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(829, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(908, 22);
             this.statusStrip1.TabIndex = 17;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -245,9 +239,9 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Location = new System.Drawing.Point(7, 138);
+            this.panel1.Location = new System.Drawing.Point(8, 148);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(814, 4);
+            this.panel1.Size = new System.Drawing.Size(893, 4);
             this.panel1.TabIndex = 30;
             // 
             // txtException
@@ -257,11 +251,11 @@
             this.txtException.BackColor = System.Drawing.SystemColors.Control;
             this.txtException.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtException.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtException.Location = new System.Drawing.Point(89, 335);
+            this.txtException.Location = new System.Drawing.Point(22, 360);
             this.txtException.Multiline = true;
             this.txtException.Name = "txtException";
             this.txtException.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtException.Size = new System.Drawing.Size(719, 151);
+            this.txtException.Size = new System.Drawing.Size(865, 151);
             this.txtException.TabIndex = 32;
             this.txtException.Visible = false;
             // 
@@ -286,7 +280,7 @@
             // lblException
             // 
             this.lblException.AutoSize = true;
-            this.lblException.Location = new System.Drawing.Point(19, 337);
+            this.lblException.Location = new System.Drawing.Point(22, 335);
             this.lblException.Name = "lblException";
             this.lblException.Size = new System.Drawing.Size(94, 22);
             this.lblException.TabIndex = 34;
@@ -297,7 +291,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(829, 540);
+            this.ClientSize = new System.Drawing.Size(908, 555);
             this.Controls.Add(this.lblException);
             this.Controls.Add(this.picLogLevel);
             this.Controls.Add(this.button1);

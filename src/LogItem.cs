@@ -10,7 +10,6 @@ namespace ProData.Infrastructure.LogViewer
 		public string ApplicationName { get; set; }
 		public string UserName { get; set; }
         public string SourceContext { get; set; }
-		public string SourceClass { get; set; }
 		public string CorrelationId { get; set; }
 		public string Message { get; set; }
 		public string Exception { get; set; }

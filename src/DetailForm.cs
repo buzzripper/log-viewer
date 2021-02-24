@@ -128,7 +128,7 @@ namespace ProData.Infrastructure.LogViewer
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format("{0} reading exception: {1}", ex.GetType().Name, ex));
+				MessageBox.Show(string.Format($@"{ex.GetType().Name} reading exception: {ex}"));
 			}
 			return null;
 		}

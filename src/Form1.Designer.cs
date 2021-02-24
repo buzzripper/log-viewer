@@ -36,7 +36,7 @@
             this.lvLogs = new System.Windows.Forms.ListView();
             this.colTimestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.colApplicationName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colAppId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colSourceContext = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colUserName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -127,7 +127,7 @@
             this.lvLogs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colTimestamp,
             this.colLevel,
-            this.colApplicationName,
+            this.colAppId,
             this.colSourceContext,
             this.colUserName,
             this.colMessage});
@@ -153,18 +153,17 @@
             // 
             // colLevel
             // 
-            this.colLevel.Text = "LevelValue";
-            this.colLevel.Width = 80;
+            this.colLevel.Text = "Level";
+            this.colLevel.Width = 45;
             // 
-            // colApplicationName
+            // colAppId
             // 
-            this.colApplicationName.Text = "App Id";
-            this.colApplicationName.Width = 75;
+            this.colAppId.Text = "App Id";
             // 
             // colSourceContext
             // 
             this.colSourceContext.Text = "Source";
-            this.colSourceContext.Width = 185;
+            this.colSourceContext.Width = 200;
             // 
             // colUserName
             // 
@@ -582,7 +581,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Button btnClearLogs;
-        private System.Windows.Forms.ColumnHeader colApplicationName;
+        private System.Windows.Forms.ColumnHeader colAppId;
         private System.Windows.Forms.TextBox txtMessage;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtSource;

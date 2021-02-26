@@ -13,7 +13,7 @@ namespace ProData.Infrastructure.LogViewer.Data
 			var logViewerData = new LogViewerData();
 
 			try {
-				logViewerData.TimerInterval = (int)Registry.GetValue(AppKey, "TimerInterval", 3000);
+				logViewerData.TimerInterval = (int)Registry.GetValue(AppKey, "TimerInterval", 1500);
 				logViewerData.MRUConnStringName = Registry.GetValue(AppKey, "MRUConnStringName", string.Empty).ToString();
 				logViewerData.MRUSortAsc = (int)Registry.GetValue(AppKey, "MRUSortAsc", 0) == 1;
 				logViewerData.AutoRefresh = (int)Registry.GetValue(AppKey, "AutoRefresh", 0) == 1;
@@ -51,7 +51,7 @@ namespace ProData.Infrastructure.LogViewer.Data
 				Registry.SetValue(AppKey, "MRUConnStringName", logViewerData.MRUConnStringName);
 				Registry.SetValue(AppKey, "MRUSortAsc", logViewerData.MRUSortAsc ? 1 : 0, RegistryValueKind.DWord);
 				Registry.SetValue(AppKey, "TimerInterval", logViewerData.TimerInterval, RegistryValueKind.DWord);
-				Registry.SetValue(AppKey, "AutoRefresh", logViewerData.MRUSortAsc ? 1 : 0, RegistryValueKind.DWord);
+				Registry.SetValue(AppKey, "AutoRefresh", logViewerData.AutoRefresh ? 1 : 0, RegistryValueKind.DWord);
 				Registry.SetValue(AppKey, "WindowPlacementStr", logViewerData.GetWindowPlacementStr());
 				Registry.SetValue(AppKey, "DetailWindowPlacementStr", logViewerData.GetDetailWindowPlacementStr());
 

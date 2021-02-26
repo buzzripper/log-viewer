@@ -20,7 +20,7 @@ namespace ProData.Infrastructure.LogViewer.Data
 		public LogViewerData()
 		{
 			this.DbConns = new List<DbConn>();
-			this.TimerInterval = 3000;
+			this.TimerInterval = 1500;
 		}
 
 		#endregion

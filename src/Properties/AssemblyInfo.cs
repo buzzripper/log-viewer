@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("LogViewer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Liazon Inc.")]
+[assembly: AssemblyCompany("ProData Media")]
 [assembly: AssemblyProduct("LogViewer")]
-[assembly: AssemblyCopyright("Copyright © Liazon 2019")]
+[assembly: AssemblyCopyright("Copyright © ProData Media 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

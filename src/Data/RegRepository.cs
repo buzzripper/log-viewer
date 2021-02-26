@@ -6,7 +6,7 @@ namespace ProData.Infrastructure.LogViewer.Data
 {
 	public class RegRepository
 	{
-		private const string AppKey = "HKEY_CURRENT_USER\\Software\\Liazon\\LogViewer";
+		private const string AppKey = "HKEY_CURRENT_USER\\Software\\ProData\\LogViewer";
 
 		public LogViewerData Load()
 		{

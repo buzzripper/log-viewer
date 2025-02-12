@@ -8,7 +8,6 @@ namespace LogViewer.Config
 		public AppConfig()
 		{
 			DbConns = new List<DbConn>();
-			TimerIntervalMs = 1500;
 		}
 
 		public bool MRUSortAsc { get; set; }

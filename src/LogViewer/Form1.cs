@@ -2,17 +2,12 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Resources;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace LogViewer;
 
@@ -20,17 +15,15 @@ public partial class Form1 : Form
 {
 	#region Constants
 
-	private const string TABLE_NAME = "Logs";
-	private const string COL_TIMESTAMP = "TimeStamp";
-	private const string COL_LEVELVALUE = "LevelValue";
-	private const string COL_APPID = "AppId";
-	private const string COL_SRCCONTEXT = "SourceContext";
-	private const string COL_MACHINENAME = "MachineName";
-	private const string COL_USERNAME = "UserName";
+	private const string TABLE_NAME = "Logs.LogEvents";
+	private const string COL_ID = "Id";
+	private const string COL_TIMESTAMPUTC = "TimeStampUTC";
+	private const string COL_LOGLEVEL = "LogLevel";
+	private const string COL_APPLICATION = "Application";
+	private const string COL_SOURCE = "Source";
 	private const string COL_CORRID = "CorrelationId";
 	private const string COL_MSG = "Message";
 	private const string COL_EX = "Exception";
-	private const string COL_ROWID = "RowId";
 	private const string COL_HASEX = "HasException";
 
 	private const string ERRLVL_VERBOSE = "VERBOSE";
@@ -51,18 +44,14 @@ public partial class Form1 : Form
 	private DbConnForm _dbConnForm;
 	private DetailForm _detailForm;
 	private bool _suspendUpdates;
-	private readonly Bitmap _sortAscBmp = null; // TODO
-	private readonly Bitmap _sortDescBmp = null; // TODO
 	private readonly ErrorLevelDisplay[] _errorLevelDisplays;
 	private bool _sortAsc;
-	private readonly Color _bgdColor = Color.FromArgb(50, 50, 50);
-	private readonly Color _labelColor = Color.FromArgb(200, 200, 200);
-	private readonly Color _textBoxForeColor = Color.FromArgb(50, 50, 50);
-	private readonly Color _btnBgdColor = Color.DimGray;
 	private bool _autoRefresh;
-	private int _timerIntervalSecs;
+	private int _timerIntervalMs;
 	private List<DbConn> _dbConns;
 	private DbConn _currDbConn;
+	private Image _imgSortAsc;
+	private Image _imgSortDesc;
 
 	#endregion
 
@@ -78,6 +67,10 @@ public partial class Form1 : Form
 	{
 		_dbConnForm = new DbConnForm();
 		_detailForm = new DetailForm(this);
+
+		_imgSortAsc = LoadEmbeddedImage("arrow_north_18.png");
+		_imgSortDesc = LoadEmbeddedImage("arrow_south_18.png");
+		picAutoRefresh.Left = picSpinner.Left;
 
 		var appConfig = ConfigManager.GetAppConfig();
 
@@ -120,9 +113,9 @@ public partial class Form1 : Form
 				SetAutoRefresh(false);
 		} else {
 			var width = lvLogs.Width - 22;
-			for (var i = 0; i < 5; i++)
+			for (var i = 0; i < 4; i++)
 				width -= lvLogs.Columns[i].Width;
-			lvLogs.Columns[5].Width = width;
+			lvLogs.Columns[4].Width = width;
 		}
 	}
 
@@ -135,12 +128,13 @@ public partial class Form1 : Form
 		_suspendUpdates = true;
 		try {
 			_autoRefresh = appConfig.AutoRefresh;
-			_timerIntervalSecs = appConfig.TimerIntervalMs;
+			_timerIntervalMs = appConfig.TimerIntervalMs > 0 ? appConfig.TimerIntervalMs : 2000;
+			timer1.Interval = _timerIntervalMs;
 
 			foreach (var errLevel in _errorLevelDisplays)
 				cmbSeverity.Items.Add(errLevel.Text);
 
-			ResetDbConns(appConfig.DbConns);
+			ResetDbConnCombo(appConfig.DbConns);
 			SetFormSizeAndPosition(appConfig.WindowSize, appConfig.WindowPosition);
 			SetSortDirection(appConfig.MRUSortAsc);
 
@@ -149,6 +143,21 @@ public partial class Form1 : Form
 
 		} finally {
 			_suspendUpdates = false;
+		}
+	}
+
+	private Image LoadEmbeddedImage(string resourceName)
+	{
+		var resourceFullName = $"LogViewer.Resources.{resourceName}";
+
+		Assembly assembly = Assembly.GetExecutingAssembly();
+
+		using (var stream = assembly.GetManifestResourceStream(resourceFullName)) {
+			if (stream != null) {
+				return Image.FromStream(stream);
+			} else {
+				throw new Exception("Resource not found: " + resourceName);
+			}
 		}
 	}
 
@@ -179,17 +188,46 @@ public partial class Form1 : Form
 		ConfigManager.SaveAppConfig(appConfig);
 	}
 
+	private void SetFormSizeAndPosition(Size windowSize, Point position)
+	{
+		this.Width = (windowSize.Width < 934) ? 934 : windowSize.Width;
+		this.Height = (windowSize.Height < 633) ? 633 : windowSize.Height;
+
+		// Get the screen that contains the specified coordinates
+		Screen screen = Screen.FromPoint(position);
+
+		// Ensure the form is not positioned outside the screen bounds
+		Rectangle workingArea = screen.WorkingArea;
+
+		int x = position.X;
+		int y = position.Y;
+
+		if (x < workingArea.Left)
+			x = workingArea.Left;
+		else if (x + this.Width > workingArea.Right)
+			x = workingArea.Right - this.Width;
+
+		if (y < workingArea.Top)
+			y = workingArea.Top;
+		else if (y + this.Height > workingArea.Bottom)
+			y = workingArea.Bottom - this.Height;
+
+		// Set the form's position
+		this.StartPosition = FormStartPosition.Manual;
+		this.Location = new Point(x, y);
+	}
+
 	#endregion
 
 	#region DbConns
 
-	private void ResetDbConns(List<DbConn> dbConns, DbConn selectDbConn = null)
+	private void ResetDbConnCombo(List<DbConn> dbConns, DbConn selectDbConn = null)
 	{
 		_dbConns = dbConns;
 
 		cmbDbConns.Items.Clear();
 
-		foreach(var dbConn in _dbConns)
+		foreach (var dbConn in _dbConns)
 			cmbDbConns.Items.Add(dbConn);
 
 		if (_dbConns.Count == 0)
@@ -216,28 +254,44 @@ public partial class Form1 : Form
 
 	private void SetDbConn(DbConn dbConn)
 	{
-		if (_currDbConn == dbConn)
-			return;
-
-		_currDbConn = dbConn;
 
 		if (dbConn == null) {
 			btnEditDatasource.Enabled = false;
 			btnDelDatasource.Enabled = false;
-			btnAutoRefresh.Enabled = false;
+			picSpinner.Enabled = false;
+			picSpinner.Cursor = Cursors.Default;
+			picRefresh.Enabled = false;
+			picRefresh.Cursor = Cursors.Default;
+			picAutoRefresh.Enabled = false;
+			picAutoRefresh.Cursor = Cursors.Default;
+			picSortOrder.Enabled = false;
+			picSortOrder.Cursor = Cursors.Default;
+
 			return;
 		}
 
 		btnEditDatasource.Enabled = true;
 		btnDelDatasource.Enabled = true;
-		btnAutoRefresh.Enabled = true;
+		picSpinner.Enabled = true;
+		picSpinner.Cursor = Cursors.Hand;
+		picRefresh.Enabled = true;
+		picRefresh.Cursor = Cursors.Hand;
+		picAutoRefresh.Enabled = true;
+		picAutoRefresh.Cursor = Cursors.Hand;
+		picSortOrder.Enabled = true;
+		picSortOrder.Cursor = Cursors.Hand;
+		
+		_detailForm.ConnString = dbConn.ConnString;
 
-		ResetApplicationFilterList();
+		_currDbConn = dbConn;
 
-		//if (!_suspendUpdates) {
-		//	LoadLogItems();
-		//	RefreshFilterLists(true);
-		//}
+		if (_currDbConn != dbConn)
+			ResetApplicationFilterList();
+
+		if (!_suspendUpdates) {
+			LoadLogItems();
+			RefreshFilterLists(true);
+		}
 	}
 
 	private void btnAddDatasource_Click(object sender, EventArgs e)
@@ -247,8 +301,9 @@ public partial class Form1 : Form
 
 			if (_dbConnForm.Run(dbConn) == DialogResult.OK) {
 				_dbConns.Add(dbConn);
-				ResetDbConns(_dbConns, dbConn);
+				ResetDbConnCombo(_dbConns, dbConn);
 				RefreshFilterLists(true);
+				//SetDbConn(dbConn);
 			}
 
 		} catch (Exception ex) {
@@ -264,7 +319,7 @@ public partial class Form1 : Form
 				return;
 
 			if (_dbConnForm.Run(dbConn) == DialogResult.OK) {
-				ResetDbConns(_dbConns, dbConn);
+				ResetDbConnCombo(_dbConns, dbConn);
 				RefreshFilterLists(true);
 			}
 		} catch (Exception ex) {
@@ -279,7 +334,7 @@ public partial class Form1 : Form
 
 		if (MessageBox.Show(this, "Delete the selected datasource?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
 			_dbConns.Remove(cmbDbConns.SelectedItem as DbConn);
-			ResetDbConns(_dbConns);
+			ResetDbConnCombo(_dbConns);
 			RefreshFilterLists(true);
 		}
 	}
@@ -290,20 +345,28 @@ public partial class Form1 : Form
 	{
 		var errorLevelDisplays = new ErrorLevelDisplay[6];
 
-		errorLevelDisplays[0] = new ErrorLevelDisplay(0, ERRLVL_VERBOSE, Color.Silver);
-		errorLevelDisplays[1] = new ErrorLevelDisplay(1, ERRLVL_DEBUG, Color.White);
-		errorLevelDisplays[2] = new ErrorLevelDisplay(2, ERRLVL_INFO, Color.White);
-		errorLevelDisplays[3] = new ErrorLevelDisplay(3, ERRLVL_WARN, Color.Gold);
-		errorLevelDisplays[4] = new ErrorLevelDisplay(4, ERRLVL_ERROR, Color.FromArgb(255, 50, 50));
-		errorLevelDisplays[5] = new ErrorLevelDisplay(5, ERRLVL_FATAL, Color.FromArgb(255, 50, 50));
+		errorLevelDisplays[0] = new ErrorLevelDisplay(0, ERRLVL_VERBOSE, Color.Black);
+		errorLevelDisplays[1] = new ErrorLevelDisplay(1, ERRLVL_DEBUG, Color.Black);
+		errorLevelDisplays[2] = new ErrorLevelDisplay(2, ERRLVL_INFO, Color.Black);
+		errorLevelDisplays[3] = new ErrorLevelDisplay(3, ERRLVL_WARN, Color.FromArgb(194, 100, 0));
+		errorLevelDisplays[4] = new ErrorLevelDisplay(4, ERRLVL_ERROR, Color.FromArgb(140, 50, 50));
+		errorLevelDisplays[5] = new ErrorLevelDisplay(5, ERRLVL_FATAL, Color.FromArgb(180, 50, 50));
 
 		return errorLevelDisplays;
 	}
+
+	#region LogEvents
 
 	private void ResetData()
 	{
 		numPageNumber.Value = 1;
 		this.LoadLogItems();
+	}
+
+	private void picRefresh_Click(object sender, EventArgs e)
+	{
+		LoadLogItems();
+
 	}
 
 	private void LoadLogItems()
@@ -335,17 +398,15 @@ public partial class Form1 : Form
 	                                FROM
 	                                (
 	                                  SELECT
-	                                    {COL_ROWID}, 
-										{COL_TIMESTAMP}, 
-										{COL_LEVELVALUE}, 
-										{COL_APPID}, 
-										{COL_SRCCONTEXT}, 
-										{COL_USERNAME}, 
-										{COL_MACHINENAME}, 
+	                                    {COL_ID}, 
+										{COL_TIMESTAMPUTC}, 
+										{COL_LOGLEVEL}, 
+										{COL_APPLICATION}, 
+										{COL_SOURCE}, 
                                         {COL_CORRID}, 
 										{COL_MSG},
 										CASE WHEN {COL_EX} = '' THEN 0 ELSE 1 END AS {COL_HASEX},
-										ROW_NUMBER() OVER (ORDER BY {COL_TIMESTAMP} DESC) AS RowNum
+										ROW_NUMBER() OVER (ORDER BY {COL_TIMESTAMPUTC} DESC) AS RowNum
 	                                  FROM 
 	                                    {TABLE_NAME} WITH(NOLOCK)
 	                                  {sqlWhere}
@@ -354,7 +415,7 @@ public partial class Form1 : Form
 	                                WHERE 
 	                                  RowNum BETWEEN {startRow} AND {endRow}
 	                                ORDER BY 
-	                                  {COL_TIMESTAMP} {orderByDir}";
+	                                  {COL_TIMESTAMPUTC} {orderByDir}";
 
 		using (SqlConnection conn = new SqlConnection(_currDbConn.ConnString))
 		using (SqlCommand cmd = new SqlCommand(sql, conn)) {
@@ -386,26 +447,25 @@ public partial class Form1 : Form
 
 			try {
 				while (reader.Read()) {
-					var logItem = new LogItem {
-						RowId = (Guid)reader[COL_ROWID],
-						TimeStamp = ((DateTime)reader[COL_TIMESTAMP]).ToLocalTime(),
-						LevelValue = (int)reader[COL_LEVELVALUE],
-						AppId = reader[COL_APPID].ToString(),
-						SourceContext = reader[COL_SRCCONTEXT].ToString(),
-						MachineName = reader[COL_MACHINENAME].ToString(),
-						UserName = reader[COL_USERNAME].ToString(),
+					var logItem = new LogEvent {
+						Id = (int)reader[COL_ID],
+						TimeStampUTC = ((DateTime)reader[COL_TIMESTAMPUTC]).ToLocalTime(),
+						LogLevel = (int)reader[COL_LOGLEVEL],
+						Application = reader[COL_APPLICATION].ToString(),
+						Source = reader[COL_SOURCE].ToString(),
 						CorrelationId = reader[COL_CORRID].ToString(),
 						Message = reader[COL_MSG].ToString(),
 						HasException = ((int)reader[COL_HASEX] == 1)
 					};
 
-					var timestampStr = logItem.TimeStamp.Date == DateTime.Now.Date ? logItem.TimeStamp.ToString("h:mm:ss.fff") : logItem.TimeStamp.ToString("h:mm:ss.fff M/d/yy");
-					var errLevelDisplay = _errorLevelDisplays[logItem.LevelValue];
+					var localTimestamp = logItem.TimeStampUTC.ToLocalTime();
+					var timestampStr = localTimestamp == DateTime.Now.Date ? localTimestamp.ToString("h:mm:ss.fff") : localTimestamp.ToString("h:mm:ss.fff M/d/yy");
+					var errLevelDisplay = _errorLevelDisplays[logItem.LogLevel];
 
-					ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.AppId, logItem.SourceContext, logItem.UserName, logItem.Message });
+					ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.Application, logItem.Source, logItem.Message });
 					lvItem.ImageIndex = errLevelDisplay.ImageIndex;
 					lvItem.ForeColor = errLevelDisplay.TextColor;
-					lvItem.ToolTipText = logItem.TimeStamp.ToString("M/d/yy");
+					lvItem.ToolTipText = logItem.TimeStampUTC.ToString("M/d/yy");
 					lvItem.Tag = logItem;
 
 					lvLogs.Items.Add(lvItem);
@@ -468,17 +528,17 @@ public partial class Form1 : Form
 	{
 		List<string> whereList = new List<string>();
 
-		// LevelValue
-		whereList.Add($"LevelValue >= {cmbSeverity.SelectedIndex} ");
+		// LogLevel
+		whereList.Add($"{COL_LOGLEVEL} >= {cmbSeverity.SelectedIndex} ");
 
 		// Machine
 		if (cmbApplicationNames.SelectedIndex > 0) {
-			whereList.Add($"{COL_APPID} = '{cmbApplicationNames.Text}' ");
+			whereList.Add($"{COL_APPLICATION} = '{cmbApplicationNames.Text}' ");
 		}
 
 		// SourceClass
 		if (!string.IsNullOrEmpty(txtSource.Text)) {
-			whereList.Add($"{COL_SRCCONTEXT} LIKE '%{txtSource.Text}%' ");
+			whereList.Add($"{COL_SOURCE} LIKE '%{txtSource.Text}%' ");
 		}
 
 		// Message
@@ -500,9 +560,11 @@ public partial class Form1 : Form
 		return result;
 	}
 
+	#endregion
+
 	#region DetailForm
 
-	public LogItem GetPrevLogItem()
+	public LogEvent GetPrevLogItem()
 	{
 		if (lvLogs.SelectedItems.Count == 0)
 			return null;
@@ -510,12 +572,12 @@ public partial class Form1 : Form
 		int idx = lvLogs.SelectedItems[0].Index;
 		if (idx > 0) {
 			lvLogs.Items[idx - 1].Selected = true;
-			return lvLogs.Items[idx - 1].Tag as LogItem;
+			return lvLogs.Items[idx - 1].Tag as LogEvent;
 		}
 		return null;
 	}
 
-	public LogItem GetNextLogItem()
+	public LogEvent GetNextLogItem()
 	{
 		if (lvLogs.SelectedItems.Count == 0)
 			return null;
@@ -523,14 +585,14 @@ public partial class Form1 : Form
 		int idx = lvLogs.SelectedItems[0].Index;
 		if (idx < lvLogs.Items.Count - 1) {
 			lvLogs.Items[idx + 1].Selected = true;
-			return lvLogs.Items[idx + 1].Tag as LogItem;
+			return lvLogs.Items[idx + 1].Tag as LogEvent;
 		}
 		return null;
 	}
 
 	#endregion
 
-	#region Refresh
+	#region Auto Refresh
 
 	private void Form1_KeyDown(object sender, KeyEventArgs e)
 	{
@@ -541,26 +603,35 @@ public partial class Form1 : Form
 
 	#region Auto-refresh
 
-	private void btnAutoRefresh_Click(object sender, EventArgs e)
+
+	private void picAutoRefresh_Click(object sender, EventArgs e)
 	{
 		SetAutoRefresh(!_autoRefresh);
+	}
+
+	private void btnAutoRefresh_Click(object sender, EventArgs e)
+	{
+
 	}
 
 	private void SetAutoRefresh(bool autoRefresh)
 	{
 		if (autoRefresh) {
 			ResetData();
-			btnAutoRefresh.Image = imageList1.Images["Spinner.gif"];
-			toolLblMessage.Text = "Auto refresh: On";
 			timer1.Enabled = true;
-			timer1.Interval = _timerIntervalSecs / 1000;
 			timer1.Start();
+			picSpinner.Visible = true;
+			picAutoRefresh.Visible = false;
+			toolLblMessage.Text = "Auto refresh: On";
+
 		} else {
 			timer1.Stop();
 			timer1.Enabled = false;
-			btnAutoRefresh.Image = imageList1.Images["auto_refresh_32.png"];
 			toolLblMessage.Text = "Auto refresh: Off";
+			picSpinner.Visible = false;
+			picAutoRefresh.Visible = true;
 		}
+
 		_autoRefresh = autoRefresh;
 	}
 
@@ -570,20 +641,24 @@ public partial class Form1 : Form
 		cmbApplicationNames.BeginInvoke(refreshDataActionStart);
 	}
 
-	private void btnSortDir_Click(object sender, EventArgs e)
+	private void picSortOrder_Click(object sender, EventArgs e)
 	{
 		SetSortDirection(!_sortAsc);
 		FillGrid((int)numPageNumber.Value, (int)numPageLength.Value);
 	}
 
+	private void btnSortDir_Click(object sender, EventArgs e)
+	{
+	}
+
 	private void SetSortDirection(bool sortAsc)
 	{
 		if (sortAsc) {
-			btnSortDir.Image = _sortDescBmp;
-			toolTip1.SetToolTip(btnSortDir, "Change to Ascending Sort");
+			//picSortOrder.BackgroundImage = _imgSortAsc;
+			//toolTip1.SetToolTip(picSortOrder, "Change to Ascending Sort");
 		} else {
-			btnSortDir.Image = _sortAscBmp;
-			toolTip1.SetToolTip(btnSortDir, "Change to Descending Sort");
+			//picSortOrder.BackgroundImage = _imgSortDesc;
+			//toolTip1.SetToolTip(picSortOrder, "Change to Descending Sort");
 		}
 
 		_sortAsc = sortAsc;
@@ -645,10 +720,10 @@ public partial class Form1 : Form
 				using (SqlCommand cmd = new SqlCommand()) {
 					cmd.Connection = conn;
 					cmd.CommandType = CommandType.Text;
-					cmd.CommandText = $"SELECT DISTINCT {COL_APPID} FROM {TABLE_NAME}";
+					cmd.CommandText = $"SELECT DISTINCT {COL_APPLICATION} FROM {TABLE_NAME}";
 					using (SqlDataReader reader = cmd.ExecuteReader()) {
 						while (reader.Read()) {
-							string appName = reader[COL_APPID].ToString();
+							string appName = reader[COL_APPLICATION].ToString();
 							if (!cmbApplicationNames.Items.Contains(appName))
 								cmbApplicationNames.Items.Add(appName);
 						}
@@ -682,11 +757,6 @@ public partial class Form1 : Form
 
 	#endregion
 
-	private void btnRefresh_Click(object sender, EventArgs e)
-	{
-		LoadLogItems();
-	}
-
 	private void cmbApplicationNames_SelectedIndexChanged(object sender, EventArgs e)
 	{
 
@@ -695,7 +765,7 @@ public partial class Form1 : Form
 	private void lvLogs_DoubleClick(object sender, EventArgs e)
 	{
 		if (lvLogs.SelectedItems.Count == 1)
-			_detailForm.ShowLog(lvLogs.SelectedItems[0].Tag as LogItem);
+			_detailForm.ShowLog(lvLogs.SelectedItems[0].Tag as LogEvent);
 	}
 
 	private void btnPageDown_Click(object sender, EventArgs e)
@@ -719,34 +789,5 @@ public partial class Form1 : Form
 	{
 		if (PurgeLogs())
 			lvLogs.Items.Clear();
-	}
-
-	private void SetFormSizeAndPosition(Size windowSize, Point position)
-	{
-		this.Width = (windowSize.Width < 934) ? 934 : windowSize.Width;
-		this.Height = (windowSize.Height < 633) ? 633 : windowSize.Height;
-
-		// Get the screen that contains the specified coordinates
-		Screen screen = Screen.FromPoint(position);
-
-		// Ensure the form is not positioned outside the screen bounds
-		Rectangle workingArea = screen.WorkingArea;
-
-		int x = position.X;
-		int y = position.Y;
-
-		if (x < workingArea.Left)
-			x = workingArea.Left;
-		else if (x + this.Width > workingArea.Right)
-			x = workingArea.Right - this.Width;
-
-		if (y < workingArea.Top)
-			y = workingArea.Top;
-		else if (y + this.Height > workingArea.Bottom)
-			y = workingArea.Bottom - this.Height;
-
-		// Set the form's position
-		this.StartPosition = FormStartPosition.Manual;
-		this.Location = new Point(x, y);
 	}
 }

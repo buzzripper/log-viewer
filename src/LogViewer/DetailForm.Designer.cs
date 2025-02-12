@@ -31,10 +31,10 @@ partial class DetailForm
 	/// </summary>
 	private void InitializeComponent()
 	{
+		System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DetailForm));
 		label7 = new Label();
-		lblAppId = new Label();
-		lblSourceContext = new Label();
-		label2 = new Label();
+		lblApplication = new Label();
+		lblSource = new Label();
 		lblException = new Label();
 		picLogLevel = new PictureBox();
 		button1 = new Button();
@@ -42,9 +42,6 @@ partial class DetailForm
 		txtException = new TextBox();
 		panel1 = new Panel();
 		statusStrip1 = new StatusStrip();
-		lblUserName = new Label();
-		label8 = new Label();
-		lblMachineName = new Label();
 		label10 = new Label();
 		txtMessage = new TextBox();
 		label5 = new Label();
@@ -54,60 +51,53 @@ partial class DetailForm
 		label3 = new Label();
 		lblRowId = new Label();
 		label1 = new Label();
+		picCopyMessage = new PictureBox();
+		picCopyException = new PictureBox();
 		((System.ComponentModel.ISupportInitialize)picLogLevel).BeginInit();
+		((System.ComponentModel.ISupportInitialize)picCopyMessage).BeginInit();
+		((System.ComponentModel.ISupportInitialize)picCopyException).BeginInit();
 		SuspendLayout();
 		// 
 		// label7
 		// 
 		label7.ImageAlign = ContentAlignment.MiddleRight;
-		label7.Location = new Point(354, 2);
+		label7.Location = new Point(340, 4);
 		label7.Margin = new Padding(2, 0, 2, 0);
 		label7.Name = "label7";
-		label7.Size = new Size(57, 13);
+		label7.Size = new Size(74, 13);
 		label7.TabIndex = 61;
-		label7.Text = "App Id:";
+		label7.Text = "Application:";
 		label7.TextAlign = ContentAlignment.MiddleRight;
 		// 
-		// lblAppId
+		// lblApplication
 		// 
-		lblAppId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-		lblAppId.AutoSize = true;
-		lblAppId.ImageAlign = ContentAlignment.BottomLeft;
-		lblAppId.Location = new Point(415, 4);
-		lblAppId.Margin = new Padding(2, 0, 2, 0);
-		lblAppId.Name = "lblAppId";
-		lblAppId.Size = new Size(52, 15);
-		lblAppId.TabIndex = 60;
-		lblAppId.Text = "lblAppId";
-		lblAppId.TextAlign = ContentAlignment.MiddleLeft;
+		lblApplication.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+		lblApplication.AutoSize = true;
+		lblApplication.ImageAlign = ContentAlignment.BottomLeft;
+		lblApplication.Location = new Point(415, 4);
+		lblApplication.Margin = new Padding(2, 0, 2, 0);
+		lblApplication.Name = "lblApplication";
+		lblApplication.Size = new Size(81, 15);
+		lblApplication.TabIndex = 60;
+		lblApplication.Text = "lblApplication";
+		lblApplication.TextAlign = ContentAlignment.MiddleLeft;
 		// 
-		// lblSourceContext
+		// lblSource
 		// 
-		lblSourceContext.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-		lblSourceContext.AutoSize = true;
-		lblSourceContext.ImageAlign = ContentAlignment.BottomLeft;
-		lblSourceContext.Location = new Point(81, 44);
-		lblSourceContext.Margin = new Padding(2, 0, 2, 0);
-		lblSourceContext.Name = "lblSourceContext";
-		lblSourceContext.Size = new Size(98, 15);
-		lblSourceContext.TabIndex = 59;
-		lblSourceContext.Text = "lblSourceContext";
-		// 
-		// label2
-		// 
-		label2.ImageAlign = ContentAlignment.MiddleRight;
-		label2.Location = new Point(354, 15);
-		label2.Margin = new Padding(2, 0, 2, 0);
-		label2.Name = "label2";
-		label2.Size = new Size(57, 13);
-		label2.TabIndex = 58;
-		label2.Text = "Machine:";
-		label2.TextAlign = ContentAlignment.MiddleRight;
+		lblSource.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+		lblSource.AutoSize = true;
+		lblSource.ImageAlign = ContentAlignment.BottomLeft;
+		lblSource.Location = new Point(415, 19);
+		lblSource.Margin = new Padding(2, 0, 2, 0);
+		lblSource.Name = "lblSource";
+		lblSource.Size = new Size(98, 15);
+		lblSource.TabIndex = 59;
+		lblSource.Text = "lblSourceContext";
 		// 
 		// lblException
 		// 
 		lblException.AutoSize = true;
-		lblException.Location = new Point(15, 181);
+		lblException.Location = new Point(15, 177);
 		lblException.Margin = new Padding(2, 0, 2, 0);
 		lblException.Name = "lblException";
 		lblException.Size = new Size(62, 15);
@@ -118,7 +108,7 @@ partial class DetailForm
 		// picLogLevel
 		// 
 		picLogLevel.Location = new Point(4, 3);
-		picLogLevel.Margin = new Padding(2, 2, 2, 2);
+		picLogLevel.Margin = new Padding(2);
 		picLogLevel.Name = "picLogLevel";
 		picLogLevel.Size = new Size(11, 10);
 		picLogLevel.TabIndex = 56;
@@ -129,10 +119,11 @@ partial class DetailForm
 		button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 		button1.BackColor = Color.Transparent;
 		button1.FlatAppearance.BorderSize = 0;
-		button1.Location = new Point(610, 20);
-		button1.Margin = new Padding(2, 2, 2, 2);
+		button1.Image = (Image)resources.GetObject("button1.Image");
+		button1.Location = new Point(584, 31);
+		button1.Margin = new Padding(2);
 		button1.Name = "button1";
-		button1.Size = new Size(20, 17);
+		button1.Size = new Size(24, 24);
 		button1.TabIndex = 48;
 		button1.UseVisualStyleBackColor = false;
 		button1.Click += btnDown_Click;
@@ -142,10 +133,11 @@ partial class DetailForm
 		btnUp.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 		btnUp.BackColor = Color.Transparent;
 		btnUp.FlatAppearance.BorderSize = 0;
-		btnUp.Location = new Point(610, 1);
-		btnUp.Margin = new Padding(2, 2, 2, 2);
+		btnUp.Image = (Image)resources.GetObject("btnUp.Image");
+		btnUp.Location = new Point(584, 4);
+		btnUp.Margin = new Padding(2);
 		btnUp.Name = "btnUp";
-		btnUp.Size = new Size(20, 17);
+		btnUp.Size = new Size(24, 24);
 		btnUp.TabIndex = 47;
 		btnUp.UseVisualStyleBackColor = false;
 		btnUp.Click += btnUp_Click;
@@ -157,11 +149,11 @@ partial class DetailForm
 		txtException.BorderStyle = BorderStyle.FixedSingle;
 		txtException.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		txtException.Location = new Point(15, 196);
-		txtException.Margin = new Padding(2, 2, 2, 2);
+		txtException.Margin = new Padding(2);
 		txtException.Multiline = true;
 		txtException.Name = "txtException";
 		txtException.ScrollBars = ScrollBars.Vertical;
-		txtException.Size = new Size(606, 91);
+		txtException.Size = new Size(589, 91);
 		txtException.TabIndex = 55;
 		txtException.Visible = false;
 		// 
@@ -169,63 +161,26 @@ partial class DetailForm
 		// 
 		panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 		panel1.BorderStyle = BorderStyle.Fixed3D;
-		panel1.Location = new Point(6, 68);
-		panel1.Margin = new Padding(2, 2, 2, 2);
+		panel1.Location = new Point(6, 62);
+		panel1.Margin = new Padding(2);
 		panel1.Name = "panel1";
-		panel1.Size = new Size(626, 4);
+		panel1.Size = new Size(609, 4);
 		panel1.TabIndex = 54;
 		// 
 		// statusStrip1
 		// 
 		statusStrip1.ImageScalingSize = new Size(24, 24);
-		statusStrip1.Location = new Point(0, 284);
+		statusStrip1.Location = new Point(0, 300);
 		statusStrip1.Name = "statusStrip1";
 		statusStrip1.Padding = new Padding(1, 0, 10, 0);
-		statusStrip1.Size = new Size(636, 22);
+		statusStrip1.Size = new Size(619, 22);
 		statusStrip1.TabIndex = 53;
 		statusStrip1.Text = "statusStrip1";
-		// 
-		// lblUserName
-		// 
-		lblUserName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-		lblUserName.AutoSize = true;
-		lblUserName.ImageAlign = ContentAlignment.BottomLeft;
-		lblUserName.Location = new Point(415, 30);
-		lblUserName.Margin = new Padding(2, 0, 2, 0);
-		lblUserName.Name = "lblUserName";
-		lblUserName.Size = new Size(75, 15);
-		lblUserName.TabIndex = 52;
-		lblUserName.Text = "lblUserName";
-		lblUserName.TextAlign = ContentAlignment.MiddleLeft;
-		// 
-		// label8
-		// 
-		label8.ImageAlign = ContentAlignment.MiddleRight;
-		label8.Location = new Point(374, 28);
-		label8.Margin = new Padding(2, 0, 2, 0);
-		label8.Name = "label8";
-		label8.Size = new Size(37, 13);
-		label8.TabIndex = 51;
-		label8.Text = "User:";
-		label8.TextAlign = ContentAlignment.MiddleRight;
-		// 
-		// lblMachineName
-		// 
-		lblMachineName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-		lblMachineName.AutoSize = true;
-		lblMachineName.ImageAlign = ContentAlignment.BottomLeft;
-		lblMachineName.Location = new Point(415, 17);
-		lblMachineName.Margin = new Padding(2, 0, 2, 0);
-		lblMachineName.Name = "lblMachineName";
-		lblMachineName.Size = new Size(98, 15);
-		lblMachineName.TabIndex = 50;
-		lblMachineName.Text = "lblMachineName";
-		lblMachineName.TextAlign = ContentAlignment.MiddleLeft;
 		// 
 		// label10
 		// 
 		label10.ImageAlign = ContentAlignment.MiddleRight;
-		label10.Location = new Point(20, 41);
+		label10.Location = new Point(356, 19);
 		label10.Margin = new Padding(2, 0, 2, 0);
 		label10.Name = "label10";
 		label10.Size = new Size(57, 13);
@@ -240,12 +195,12 @@ partial class DetailForm
 		txtMessage.BorderStyle = BorderStyle.FixedSingle;
 		txtMessage.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
 		txtMessage.Location = new Point(15, 88);
-		txtMessage.Margin = new Padding(2, 2, 2, 2);
+		txtMessage.Margin = new Padding(2);
 		txtMessage.Multiline = true;
 		txtMessage.Name = "txtMessage";
 		txtMessage.ReadOnly = true;
 		txtMessage.ScrollBars = ScrollBars.Vertical;
-		txtMessage.Size = new Size(606, 85);
+		txtMessage.Size = new Size(589, 85);
 		txtMessage.TabIndex = 46;
 		// 
 		// label5
@@ -264,7 +219,7 @@ partial class DetailForm
 		lblSeverity.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 		lblSeverity.AutoSize = true;
 		lblSeverity.ImageAlign = ContentAlignment.BottomLeft;
-		lblSeverity.Location = new Point(81, 31);
+		lblSeverity.Location = new Point(81, 33);
 		lblSeverity.Margin = new Padding(2, 0, 2, 0);
 		lblSeverity.Name = "lblSeverity";
 		lblSeverity.Size = new Size(61, 15);
@@ -274,12 +229,12 @@ partial class DetailForm
 		// label4
 		// 
 		label4.ImageAlign = ContentAlignment.MiddleRight;
-		label4.Location = new Point(21, 28);
+		label4.Location = new Point(0, 33);
 		label4.Margin = new Padding(2, 0, 2, 0);
 		label4.Name = "label4";
-		label4.Size = new Size(56, 13);
+		label4.Size = new Size(80, 15);
 		label4.TabIndex = 43;
-		label4.Text = "Severity:";
+		label4.Text = "Log Level:";
 		label4.TextAlign = ContentAlignment.MiddleRight;
 		// 
 		// lblTimestamp
@@ -287,7 +242,7 @@ partial class DetailForm
 		lblTimestamp.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 		lblTimestamp.AutoSize = true;
 		lblTimestamp.ImageAlign = ContentAlignment.BottomLeft;
-		lblTimestamp.Location = new Point(81, 17);
+		lblTimestamp.Location = new Point(81, 19);
 		lblTimestamp.Margin = new Padding(2, 0, 2, 0);
 		lblTimestamp.Name = "lblTimestamp";
 		lblTimestamp.Size = new Size(79, 15);
@@ -297,7 +252,7 @@ partial class DetailForm
 		// label3
 		// 
 		label3.ImageAlign = ContentAlignment.MiddleRight;
-		label3.Location = new Point(5, 15);
+		label3.Location = new Point(6, 18);
 		label3.Margin = new Padding(2, 0, 2, 0);
 		label3.Name = "label3";
 		label3.Size = new Size(72, 13);
@@ -320,23 +275,48 @@ partial class DetailForm
 		// label1
 		// 
 		label1.ImageAlign = ContentAlignment.MiddleRight;
-		label1.Location = new Point(26, 2);
+		label1.Location = new Point(26, 4);
 		label1.Margin = new Padding(2, 0, 2, 0);
 		label1.Name = "label1";
 		label1.Size = new Size(51, 13);
 		label1.TabIndex = 39;
-		label1.Text = "Row ID:";
+		label1.Text = "Id:";
 		label1.TextAlign = ContentAlignment.MiddleRight;
+		// 
+		// picCopyMessage
+		// 
+		picCopyMessage.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		picCopyMessage.BackgroundImage = (Image)resources.GetObject("picCopyMessage.BackgroundImage");
+		picCopyMessage.BackgroundImageLayout = ImageLayout.Center;
+		picCopyMessage.Cursor = Cursors.Hand;
+		picCopyMessage.Location = new Point(551, 64);
+		picCopyMessage.Name = "picCopyMessage";
+		picCopyMessage.Size = new Size(33, 24);
+		picCopyMessage.TabIndex = 62;
+		picCopyMessage.TabStop = false;
+		picCopyMessage.Click += picCopyMessage_Click;
+		// 
+		// picCopyException
+		// 
+		picCopyException.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		picCopyException.BackgroundImage = (Image)resources.GetObject("picCopyException.BackgroundImage");
+		picCopyException.BackgroundImageLayout = ImageLayout.Center;
+		picCopyException.Cursor = Cursors.Hand;
+		picCopyException.Location = new Point(551, 172);
+		picCopyException.Name = "picCopyException";
+		picCopyException.Size = new Size(33, 24);
+		picCopyException.TabIndex = 63;
+		picCopyException.TabStop = false;
+		picCopyException.Click += picCopyException_Click;
 		// 
 		// DetailForm
 		// 
 		AutoScaleDimensions = new SizeF(7F, 15F);
 		AutoScaleMode = AutoScaleMode.Font;
-		ClientSize = new Size(636, 306);
+		ClientSize = new Size(619, 322);
 		Controls.Add(label7);
-		Controls.Add(lblAppId);
-		Controls.Add(lblSourceContext);
-		Controls.Add(label2);
+		Controls.Add(lblApplication);
+		Controls.Add(lblSource);
 		Controls.Add(lblException);
 		Controls.Add(picLogLevel);
 		Controls.Add(button1);
@@ -344,9 +324,6 @@ partial class DetailForm
 		Controls.Add(txtException);
 		Controls.Add(panel1);
 		Controls.Add(statusStrip1);
-		Controls.Add(lblUserName);
-		Controls.Add(label8);
-		Controls.Add(lblMachineName);
 		Controls.Add(label10);
 		Controls.Add(txtMessage);
 		Controls.Add(label5);
@@ -356,7 +333,9 @@ partial class DetailForm
 		Controls.Add(label3);
 		Controls.Add(lblRowId);
 		Controls.Add(label1);
-		Margin = new Padding(2, 2, 2, 2);
+		Controls.Add(picCopyMessage);
+		Controls.Add(picCopyException);
+		Margin = new Padding(2);
 		MaximizeBox = false;
 		MinimizeBox = false;
 		Name = "DetailForm";
@@ -365,6 +344,8 @@ partial class DetailForm
 		Load += DetailForm_Load;
 		Shown += DetailForm_Shown;
 		((System.ComponentModel.ISupportInitialize)picLogLevel).EndInit();
+		((System.ComponentModel.ISupportInitialize)picCopyMessage).EndInit();
+		((System.ComponentModel.ISupportInitialize)picCopyException).EndInit();
 		ResumeLayout(false);
 		PerformLayout();
 	}
@@ -372,9 +353,8 @@ partial class DetailForm
 	#endregion
 
 	private Label label7;
-	private Label lblAppId;
-	private Label lblSourceContext;
-	private Label label2;
+	private Label lblApplication;
+	private Label lblSource;
 	private Label lblException;
 	private PictureBox picLogLevel;
 	private Button button1;
@@ -382,9 +362,6 @@ partial class DetailForm
 	private TextBox txtException;
 	private Panel panel1;
 	private StatusStrip statusStrip1;
-	private Label lblUserName;
-	private Label label8;
-	private Label lblMachineName;
 	private Label label10;
 	private TextBox txtMessage;
 	private Label label5;
@@ -394,4 +371,6 @@ partial class DetailForm
 	private Label label3;
 	private Label lblRowId;
 	private Label label1;
+	private PictureBox picCopyMessage;
+	private PictureBox picCopyException;
 }

@@ -5,6 +5,8 @@ using System.Text.Json;
 namespace LogViewer.Config;
 internal static class ConfigManager
 {
+	private static JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
+
 	private const string cFoldername = "Dyvenix";
 	private const string cFileName = "DyvenixLogViewer.config";
 
@@ -33,7 +35,7 @@ internal static class ConfigManager
 	internal static void SaveAppConfig(AppConfig appConfig)
 	{
 
-		var json = JsonSerializer.Serialize(appConfig);
+		var json = JsonSerializer.Serialize(appConfig, options: _jsonSerializerOptions);
 		File.WriteAllText(_configFilepath, json);
 	}
 }

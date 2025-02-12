@@ -2,15 +2,14 @@
 
 namespace LogViewer;
 
-public class LogItem
+public class LogEvent
 {
-	public Guid RowId { get; set; }
-	public DateTime TimeStamp { get; set; }
-	public int LevelValue { get; set; }
-	public string AppId { get; set; }
-	public string MachineName { get; set; }
+	public int Id { get; set; }
+	public DateTime TimeStampUTC { get; set; }
+	public int LogLevel { get; set; }
+	public string Application { get; set; }
 	public string UserName { get; set; }
-	public string SourceContext { get; set; }
+	public string Source { get; set; }
 	public string CorrelationId { get; set; }
 	public string Message { get; set; }
 	public string Exception { get; set; }

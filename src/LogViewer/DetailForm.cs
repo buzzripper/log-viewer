@@ -18,7 +18,7 @@ public partial class DetailForm : Form
 	private readonly Form1 _mainForm;
 
 	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-	public DbConn DbConn { get; set; }
+	public string ConnString { get; set; }
 
 	#region Ctors / Forms Events
 
@@ -46,55 +46,49 @@ public partial class DetailForm : Form
 
 	private void btnUp_Click(object sender, EventArgs e)
 	{
-		LogItem logItem = _mainForm.GetPrevLogItem();
+		LogEvent logItem = _mainForm.GetPrevLogItem();
 		if (logItem != null)
 			ShowLog(logItem);
 	}
 
 	private void btnDown_Click(object sender, EventArgs e)
 	{
-		LogItem logItem = _mainForm.GetNextLogItem();
+		LogEvent logItem = _mainForm.GetNextLogItem();
 		if (logItem != null)
 			ShowLog(logItem);
 	}
 
 
-	public void ShowLog(LogItem logItem)
+	public void ShowLog(LogEvent logItem)
 	{
 		_mainForm.Cursor = Cursors.WaitCursor;
-		try
-		{
-			lblRowId.Text = logItem.RowId.ToString();
-			lblTimestamp.Text = logItem.TimeStamp.ToString(CultureInfo.InvariantCulture);
-			lblSeverity.Text = logItem.LevelValue.ToString();
-			lblSourceContext.Text = logItem.SourceContext;
-			lblAppId.Text = logItem.AppId;
-			lblMachineName.Text = logItem.MachineName;
-			lblUserName.Text = logItem.UserName;
+		try {
+			lblRowId.Text = logItem.Id.ToString();
+			lblTimestamp.Text = logItem.TimeStampUTC.ToString(CultureInfo.InvariantCulture);
+			lblSeverity.Text = logItem.LogLevel.ToString();
+			lblSource.Text = logItem.Source;
+			lblApplication.Text = logItem.Application;
 			txtMessage.Text = logItem.Message;
-			if (!string.IsNullOrWhiteSpace(logItem.Exception))
-			{
+			if (logItem.HasException) {
 				if (logItem.ExceptionWasLoaded)
 					txtException.Text = logItem.Exception;
 				else
-					txtException.Text = LoadException(logItem.RowId);
+					txtException.Text = LoadException(logItem.Id);
 				ShowException(true);
 				lblException.Visible = true;
-			}
-			else
-			{
+				picCopyException.Visible = true;
+			} else {
 				txtException.Text = null;
 				ShowException(false);
 				lblException.Visible = false;
+				picCopyException.Visible = false;
 			}
 
 			txtMessage.SelectionStart = 0;
 			txtMessage.SelectionLength = 0;
 			txtException.SelectionStart = 0;
 			txtException.SelectionLength = 0;
-		}
-		finally
-		{
+		} finally {
 			_mainForm.Cursor = Cursors.Default;
 		}
 
@@ -106,19 +100,17 @@ public partial class DetailForm : Form
 
 	private void ShowException(bool showException)
 	{
-		if (showException)
-		{
+		if (showException) {
 			txtMessage.Height = ((this.Height - txtMessage.Top - BottomOffset) / 2);
 			txtMessage.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-			txtException.Top = txtMessage.Top + txtMessage.Height + 15;
-			txtException.Height = txtMessage.Height;
+			txtException.Top = txtMessage.Top + txtMessage.Height + 40;
+			txtException.Height = this.Height - txtMessage.Top - txtMessage.Height - 110;
 			txtException.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-			lblException.Top = txtMessage.Top + txtMessage.Height + 5;
+			lblException.Top = txtMessage.Top + txtMessage.Height + 10;
 			txtException.Visible = true;
-			lblException.Visible = true;
-		}
-		else
-		{
+			picCopyException.Top = lblException.Top - 4;
+			picCopyException.Visible = true;
+		} else {
 			txtMessage.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
 			txtMessage.Height = this.Height - txtMessage.Top - BottomOffset;
 			txtException.Visible = false;
@@ -126,29 +118,33 @@ public partial class DetailForm : Form
 		}
 	}
 
-	private string LoadException(Guid rowId)
+	private string LoadException(int id)
 	{
-		try
-		{
-			string sql = string.Format("SELECT Exception FROM Logs WHERE RowId = '{0}'", rowId);
-			using (var conn = new SqlConnection(this.DbConn.ConnString))
-			using (SqlCommand cmd = new SqlCommand(sql, conn))
-			{
+		try {
+			string sql = string.Format("SELECT Exception FROM Logs.LogEvents WHERE Id = '{0}'", id);
+			using (var conn = new SqlConnection(this.ConnString))
+			using (SqlCommand cmd = new SqlCommand(sql, conn)) {
 				cmd.CommandType = CommandType.Text;
 				conn.Open();
-				using (SqlDataReader reader = cmd.ExecuteReader())
-				{
-					if (reader.Read())
-					{
+				using (SqlDataReader reader = cmd.ExecuteReader()) {
+					if (reader.Read()) {
 						return reader["Exception"].ToString();
 					}
 				}
 			}
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			MessageBox.Show(string.Format($@"{ex.GetType().Name} reading exception: {ex}"));
 		}
 		return null;
+	}
+
+	private void picCopyMessage_Click(object sender, EventArgs e)
+	{
+		Clipboard.SetText(txtMessage.Text);
+	}
+
+	private void picCopyException_Click(object sender, EventArgs e)
+	{
+		Clipboard.SetText(txtException.Text);
 	}
 }

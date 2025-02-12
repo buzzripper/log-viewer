@@ -1,9 +1,8 @@
 ﻿using LogViewer.Config;
-using LogViewer.Data;
 using Microsoft.Data.SqlClient;
-using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
@@ -12,13 +11,11 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace LogViewer;
+
 public partial class Form1 : Form
 {
 	#region Constants
@@ -47,19 +44,17 @@ public partial class Form1 : Form
 
 	#region Static
 
-	public static string ConnStr;
-
 	#endregion
 
 	#region Fields
 
+	private DbConnForm _dbConnForm;
+	private DetailForm _detailForm;
 	private bool _suspendUpdates;
-	private DatasourceForm _datasourceForm;
 	private readonly Bitmap _sortAscBmp = null; // TODO
 	private readonly Bitmap _sortDescBmp = null; // TODO
 	private readonly ErrorLevelDisplay[] _errorLevelDisplays;
 	private bool _sortAsc;
-	private DetailForm _detailForm;
 	private readonly Color _bgdColor = Color.FromArgb(50, 50, 50);
 	private readonly Color _labelColor = Color.FromArgb(200, 200, 200);
 	private readonly Color _textBoxForeColor = Color.FromArgb(50, 50, 50);
@@ -67,6 +62,7 @@ public partial class Form1 : Form
 	private bool _autoRefresh;
 	private int _timerIntervalSecs;
 	private List<DbConn> _dbConns;
+	private DbConn _currDbConn;
 
 	#endregion
 
@@ -80,6 +76,9 @@ public partial class Form1 : Form
 
 	private void Form1_Load(object sender, EventArgs e)
 	{
+		_dbConnForm = new DbConnForm();
+		_detailForm = new DetailForm(this);
+
 		var appConfig = ConfigManager.GetAppConfig();
 
 		PopulateForm(appConfig);
@@ -101,14 +100,12 @@ public partial class Form1 : Form
 
 	private void Form1_Shown(object sender, EventArgs e)
 	{
-		// Negate it first to initialize
-		SetAutoRefresh(!_autoRefresh);
 	}
 
 	private void Form1_Activated(object sender, EventArgs e)
 	{
 		if (this.WindowState == FormWindowState.Minimized)
-			SetAutoRefresh(_autoRefresh);
+			SetAutoRefresh(false);
 	}
 
 	private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -118,13 +115,10 @@ public partial class Form1 : Form
 
 	private void Form1_Resize(object sender, EventArgs e)
 	{
-		if (this.WindowState == FormWindowState.Minimized)
-		{
+		if (this.WindowState == FormWindowState.Minimized) {
 			if (timer1.Enabled)
 				SetAutoRefresh(false);
-		}
-		else
-		{
+		} else {
 			var width = lvLogs.Width - 22;
 			for (var i = 0; i < 5; i++)
 				width -= lvLogs.Columns[i].Width;
@@ -134,20 +128,159 @@ public partial class Form1 : Form
 
 	#endregion
 
-	#region Properties
+	#region Initialization
 
-	private DatasourceForm DatasourceForm
+	private void PopulateForm(AppConfig appConfig)
 	{
-		get { return _datasourceForm ?? (_datasourceForm = new DatasourceForm()); }
+		_suspendUpdates = true;
+		try {
+			_autoRefresh = appConfig.AutoRefresh;
+			_timerIntervalSecs = appConfig.TimerIntervalMs;
+
+			foreach (var errLevel in _errorLevelDisplays)
+				cmbSeverity.Items.Add(errLevel.Text);
+
+			ResetDbConns(appConfig.DbConns);
+			SetFormSizeAndPosition(appConfig.WindowSize, appConfig.WindowPosition);
+			SetSortDirection(appConfig.MRUSortAsc);
+
+			cmbSeverity.SelectedIndex = 0;
+			cmbApplicationNames.Items.Insert(0, string.Empty);
+
+		} finally {
+			_suspendUpdates = false;
+		}
 	}
 
-	private DetailForm DetailForm
+	#endregion
+
+	#region Settings
+
+	private void SaveSettings()
 	{
-		get
-		{
-			if (_detailForm == null)
-				_detailForm = new DetailForm(this);
-			return _detailForm;
+		// Save settings
+		var appConfig = new AppConfig();
+
+		appConfig.MRUSortAsc = _sortAsc;
+		appConfig.AutoRefresh = timer1.Enabled;
+		appConfig.TimerIntervalMs = timer1.Interval;
+
+		appConfig.DbConns = _dbConns.ToList();
+
+		// Window
+		if (this.WindowState == FormWindowState.Normal) {
+			appConfig.WindowPosition = this.Location;
+			appConfig.WindowSize = this.Size;
+		} else {
+			appConfig.WindowPosition = this.RestoreBounds.Location;
+			appConfig.WindowSize = this.RestoreBounds.Size;
+		}
+
+		ConfigManager.SaveAppConfig(appConfig);
+	}
+
+	#endregion
+
+	#region DbConns
+
+	private void ResetDbConns(List<DbConn> dbConns, DbConn selectDbConn = null)
+	{
+		_dbConns = dbConns;
+
+		cmbDbConns.Items.Clear();
+
+		foreach(var dbConn in _dbConns)
+			cmbDbConns.Items.Add(dbConn);
+
+		if (_dbConns.Count == 0)
+			return;
+
+		if (selectDbConn != null) {
+			cmbDbConns.SelectedItem = selectDbConn;
+		} else {
+			// Select the default connection, if one is set
+			var defaultDbConn = _dbConns.FirstOrDefault(c => c.IsDefault);
+			if (defaultDbConn != null)
+				cmbDbConns.SelectedItem = defaultDbConn;
+			else
+				// No default, simply select the first one
+				cmbDbConns.SelectedIndex = 0;
+		}
+	}
+
+	private void cmbDbConns_SelectedIndexChanged(object sender, EventArgs e)
+	{
+		SetDbConn(cmbDbConns.SelectedItem as DbConn);
+		lvLogs.Focus();
+	}
+
+	private void SetDbConn(DbConn dbConn)
+	{
+		if (_currDbConn == dbConn)
+			return;
+
+		_currDbConn = dbConn;
+
+		if (dbConn == null) {
+			btnEditDatasource.Enabled = false;
+			btnDelDatasource.Enabled = false;
+			btnAutoRefresh.Enabled = false;
+			return;
+		}
+
+		btnEditDatasource.Enabled = true;
+		btnDelDatasource.Enabled = true;
+		btnAutoRefresh.Enabled = true;
+
+		ResetApplicationFilterList();
+
+		//if (!_suspendUpdates) {
+		//	LoadLogItems();
+		//	RefreshFilterLists(true);
+		//}
+	}
+
+	private void btnAddDatasource_Click(object sender, EventArgs e)
+	{
+		try {
+			var dbConn = new DbConn();
+
+			if (_dbConnForm.Run(dbConn) == DialogResult.OK) {
+				_dbConns.Add(dbConn);
+				ResetDbConns(_dbConns, dbConn);
+				RefreshFilterLists(true);
+			}
+
+		} catch (Exception ex) {
+			MessageBox.Show(this, $@"(btnAddDatasource_Click) {ex.GetType().Name}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+	}
+
+	private void btnEditDatasource_Click(object sender, EventArgs e)
+	{
+		try {
+			DbConn dbConn = cmbDbConns.SelectedItem as DbConn;
+			if (dbConn == null)
+				return;
+
+			if (_dbConnForm.Run(dbConn) == DialogResult.OK) {
+				ResetDbConns(_dbConns, dbConn);
+				RefreshFilterLists(true);
+			}
+		} catch (Exception ex) {
+			MessageBox.Show(string.Format("(btnAddDatasource_Click) {0}: {1}", ex.GetType().Name, ex.Message));
+		}
+	}
+
+	private void btnDelDatasource_Click(object sender, EventArgs e)
+	{
+		if (cmbDbConns.SelectedItem == null)
+			return;
+
+		if (MessageBox.Show(this, "Delete the selected datasource?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+			_dbConns.Remove(cmbDbConns.SelectedItem as DbConn);
+			ResetDbConns(_dbConns);
+			RefreshFilterLists(true);
 		}
 	}
 
@@ -167,125 +300,6 @@ public partial class Form1 : Form
 		return errorLevelDisplays;
 	}
 
-	#region Datasources
-
-	private void SelectInitialDbConn(AppConfig appConfig)
-	{
-		if (appConfig.DbConns.Count > 0)
-		{
-			var i = 0;
-			foreach (DbConn dbConn in cmbDbConns.Items)
-			{
-				if (dbConn.Name == appConfig.MRUConnStringName)
-				{
-					cmbDbConns.SelectedIndex = i;
-					return;
-				}
-				i++;
-			}
-			cmbDbConns.SelectedIndex = 0;
-		}
-	}
-
-	private void PopulateForm(AppConfig appConfig)
-	{
-		_suspendUpdates = true;
-		try
-		{
-			_autoRefresh = appConfig.AutoRefresh;
-			_timerIntervalSecs = appConfig.TimerIntervalSecs;
-
-			foreach (var errLevel in _errorLevelDisplays)
-				cmbSeverity.Items.Add(errLevel.Text);
-
-			cmbSeverity.SelectedIndex = 0;
-
-			_dbConns = new List<DbConn>();
-			foreach (DbConn dbConn in appConfig.DbConns)
-			{
-				_dbConns.Add(dbConn);
-				cmbDbConns.Items.Add(dbConn);
-			}
-			SelectInitialDbConn(appConfig);
-
-			cmbApplicationNames.Items.Insert(0, string.Empty);
-
-			SetFormSizeAndPosition(appConfig.WindowSize, appConfig.WindowPosition);
-
-			SetSortDirection(appConfig.MRUSortAsc);
-		}
-		finally
-		{
-			_suspendUpdates = false;
-		}
-	}
-
-	private void SaveSettings()
-	{
-		// Save settings
-		var appConfig = new AppConfig();
-
-		appConfig.MRUConnStringName = cmbDbConns.Text;
-		appConfig.MRUSortAsc = _sortAsc;
-		appConfig.AutoRefresh = timer1.Enabled;
-		appConfig.TimerIntervalSecs = timer1.Interval * 1000;
-
-		appConfig.DbConns = cmbDbConns.Items.Cast<DbConn>().ToList();
-
-		// Window
-		if (this.WindowState == FormWindowState.Normal)
-		{
-			appConfig.WindowPosition = this.Location;
-			appConfig.WindowSize = this.Size;
-		}
-		else
-		{
-			appConfig.WindowPosition = this.RestoreBounds.Location;
-			appConfig.WindowSize = this.RestoreBounds.Size;
-		}
-
-		ConfigManager.SaveAppConfig(appConfig);
-	}
-
-	private void cmbDbConn_SelectedIndexChanged(object sender, EventArgs e)
-	{
-		lvLogs.Focus();
-		DbConnChanged();
-	}
-
-	private void DbConnChanged()
-	{
-		if (cmbDbConns.SelectedItem == null)
-		{
-			btnEditDatasource.Enabled = false;
-			btnDelDatasource.Enabled = false;
-			ConnStr = string.Empty;
-			return;
-		}
-
-		btnEditDatasource.Enabled = true;
-		btnDelDatasource.Enabled = true;
-
-		ResetApplicationFilterList();
-
-		DbConn dbConn = (cmbDbConns.SelectedItem as DbConn);
-		if (dbConn == null)
-		{
-			MessageBox.Show(this, "Connection string data is null.", "Connection String Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			return;
-		}
-
-		ConnStr = dbConn.ConnectionString;
-
-		if (!_suspendUpdates)
-		{
-			LoadLogItems();
-			RefreshFilterLists(true);
-		}
-	}
-
-	#endregion
-
 	private void ResetData()
 	{
 		numPageNumber.Value = 1;
@@ -295,21 +309,16 @@ public partial class Form1 : Form
 	private void LoadLogItems()
 	{
 		this.Cursor = Cursors.WaitCursor;
-		try
-		{
+		try {
 			Refresh();
 			FillGrid((int)numPageNumber.Value, (int)numPageLength.Value);
 			toolLblMessage.Text = null;
 
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			SetAutoRefresh(false);
 			MessageBox.Show(ex.Message);
 
-		}
-		finally
-		{
+		} finally {
 			this.Cursor = Cursors.Default;
 		}
 	}
@@ -347,50 +356,37 @@ public partial class Form1 : Form
 	                                ORDER BY 
 	                                  {COL_TIMESTAMP} {orderByDir}";
 
-		using (SqlConnection conn = new SqlConnection(ConnStr))
-		using (SqlCommand cmd = new SqlCommand(sql, conn))
-		{
+		using (SqlConnection conn = new SqlConnection(_currDbConn.ConnString))
+		using (SqlCommand cmd = new SqlCommand(sql, conn)) {
 			cmd.CommandType = CommandType.Text;
 
-			try
-			{
+			try {
 				conn.Open();
-			}
-			catch
-			{
+			} catch {
 				// DB was probably re-created since the last calll, let's try once more
 				conn.Open();
 			}
 
 			SqlDataReader reader;
-			try
-			{
+			try {
 				reader = cmd.ExecuteReader();
 
-			}
-			catch (SqlException sqlEx)
-			{
+			} catch (SqlException sqlEx) {
 				// Sql Error #10054 means the database rebuild script was recently run but the connection pool
 				// didn't know about it so it tries connecting on a stale connection. Let's try once more..
-				if (sqlEx.Number == 10054)
-				{
+				if (sqlEx.Number == 10054) {
 					conn.Open();
 					reader = cmd.ExecuteReader();
-				}
-				else
-				{
+				} else {
 					throw;
 				}
 			}
 
 			lvLogs.Items.Clear();
 
-			try
-			{
-				while (reader.Read())
-				{
-					var logItem = new LogItem
-					{
+			try {
+				while (reader.Read()) {
+					var logItem = new LogItem {
 						RowId = (Guid)reader[COL_ROWID],
 						TimeStamp = ((DateTime)reader[COL_TIMESTAMP]).ToLocalTime(),
 						LevelValue = (int)reader[COL_LEVELVALUE],
@@ -414,9 +410,7 @@ public partial class Form1 : Form
 
 					lvLogs.Items.Add(lvItem);
 				}
-			}
-			finally
-			{
+			} finally {
 				reader.Dispose();
 			}
 		}
@@ -431,17 +425,12 @@ public partial class Form1 : Form
 		if (MessageBox.Show(msg, "Confirm Delete Logs", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
 			return false;
 
-		try
-		{
-			using (SqlConnection conn = new SqlConnection(ConnStr))
-			using (SqlCommand cmd = new SqlCommand())
-			{
-				try
-				{
+		try {
+			using (SqlConnection conn = new SqlConnection(_currDbConn.ConnString))
+			using (SqlCommand cmd = new SqlCommand()) {
+				try {
 					conn.Open();
-				}
-				catch (SqlException)
-				{
+				} catch (SqlException) {
 					// Try once more
 					conn.Open();
 				}
@@ -451,21 +440,15 @@ public partial class Form1 : Form
 				cmd.CommandText = $"DELETE FROM {TABLE_NAME}";
 				cmd.CommandTimeout = 300;       // 5 minutes, sometimes these take a long time
 
-				try
-				{
+				try {
 					cmd.ExecuteNonQuery();
-				}
-				catch (SqlException sqlEx)
-				{
+				} catch (SqlException sqlEx) {
 					// Sql Error #10054 means the database rebuild script was recently run but the connection pool
 					// didn't know about it so it tries connecting on a stale connection. Another try will get a new connection, so let's try
-					if (sqlEx.Number == 10054)
-					{
+					if (sqlEx.Number == 10054) {
 						conn.Open();
 						cmd.ExecuteNonQuery();
-					}
-					else
-					{
+					} else {
 						throw;
 					}
 				}
@@ -475,9 +458,7 @@ public partial class Form1 : Form
 
 			return true;
 
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			MessageBox.Show(ex.Message);
 			return false;
 		}
@@ -491,30 +472,25 @@ public partial class Form1 : Form
 		whereList.Add($"LevelValue >= {cmbSeverity.SelectedIndex} ");
 
 		// Machine
-		if (cmbApplicationNames.SelectedIndex > 0)
-		{
+		if (cmbApplicationNames.SelectedIndex > 0) {
 			whereList.Add($"{COL_APPID} = '{cmbApplicationNames.Text}' ");
 		}
 
 		// SourceClass
-		if (!string.IsNullOrEmpty(txtSource.Text))
-		{
+		if (!string.IsNullOrEmpty(txtSource.Text)) {
 			whereList.Add($"{COL_SRCCONTEXT} LIKE '%{txtSource.Text}%' ");
 		}
 
 		// Message
-		if (!string.IsNullOrEmpty(txtMessage.Text))
-		{
+		if (!string.IsNullOrEmpty(txtMessage.Text)) {
 			whereList.Add($"{COL_MSG} LIKE '%{txtMessage.Text}%' ");
 		}
 
 		string result = null;
 
-		if (whereList.Count > 0)
-		{
+		if (whereList.Count > 0) {
 			result = "WHERE ";
-			for (int i = 0; i < whereList.Count; i++)
-			{
+			for (int i = 0; i < whereList.Count; i++) {
 				if (i > 0)
 					result += " AND ";
 				result += whereList[i];
@@ -532,8 +508,7 @@ public partial class Form1 : Form
 			return null;
 
 		int idx = lvLogs.SelectedItems[0].Index;
-		if (idx > 0)
-		{
+		if (idx > 0) {
 			lvLogs.Items[idx - 1].Selected = true;
 			return lvLogs.Items[idx - 1].Tag as LogItem;
 		}
@@ -546,8 +521,7 @@ public partial class Form1 : Form
 			return null;
 
 		int idx = lvLogs.SelectedItems[0].Index;
-		if (idx < lvLogs.Items.Count - 1)
-		{
+		if (idx < lvLogs.Items.Count - 1) {
 			lvLogs.Items[idx + 1].Selected = true;
 			return lvLogs.Items[idx + 1].Tag as LogItem;
 		}
@@ -574,24 +548,20 @@ public partial class Form1 : Form
 
 	private void SetAutoRefresh(bool autoRefresh)
 	{
-		_autoRefresh = !_autoRefresh;
-
-		if (autoRefresh)
-		{
+		if (autoRefresh) {
 			ResetData();
 			btnAutoRefresh.Image = imageList1.Images["Spinner.gif"];
 			toolLblMessage.Text = "Auto refresh: On";
 			timer1.Enabled = true;
 			timer1.Interval = _timerIntervalSecs / 1000;
 			timer1.Start();
-		}
-		else
-		{
+		} else {
 			timer1.Stop();
 			timer1.Enabled = false;
 			btnAutoRefresh.Image = imageList1.Images["auto_refresh_32.png"];
 			toolLblMessage.Text = "Auto refresh: Off";
 		}
+		_autoRefresh = autoRefresh;
 	}
 
 	private void timer1_Tick(object sender, EventArgs e)
@@ -608,13 +578,10 @@ public partial class Form1 : Form
 
 	private void SetSortDirection(bool sortAsc)
 	{
-		if (sortAsc)
-		{
+		if (sortAsc) {
 			btnSortDir.Image = _sortDescBmp;
 			toolTip1.SetToolTip(btnSortDir, "Change to Ascending Sort");
-		}
-		else
-		{
+		} else {
 			btnSortDir.Image = _sortAscBmp;
 			toolTip1.SetToolTip(btnSortDir, "Change to Descending Sort");
 		}
@@ -628,8 +595,7 @@ public partial class Form1 : Form
 
 	private void cmbSeverity_SelectedIndexChanged(object sender, EventArgs e)
 	{
-		if (!_suspendUpdates)
-		{
+		if (!_suspendUpdates) {
 			LoadLogItems();
 			lvLogs.Focus();
 		}
@@ -637,8 +603,7 @@ public partial class Form1 : Form
 
 	private void cmbMachineNames_SelectedIndexChanged(object sender, EventArgs e)
 	{
-		if (!_suspendUpdates)
-		{
+		if (!_suspendUpdates) {
 			lvLogs.Focus();
 			LoadLogItems();
 		}
@@ -646,8 +611,7 @@ public partial class Form1 : Form
 
 	private void cmbApplications_SelectedIndexChanged(object sender, EventArgs e)
 	{
-		if (!_suspendUpdates)
-		{
+		if (!_suspendUpdates) {
 			lvLogs.Focus();
 			LoadLogItems();
 		}
@@ -673,22 +637,17 @@ public partial class Form1 : Form
 	{
 		if (clearList)
 			ResetApplicationFilterList();
-		try
-		{
-			using (SqlConnection conn = new SqlConnection(ConnStr))
-			{
+		try {
+			using (SqlConnection conn = new SqlConnection(_currDbConn.ConnString)) {
 				conn.Open();
 
 				// AppName
-				using (SqlCommand cmd = new SqlCommand())
-				{
+				using (SqlCommand cmd = new SqlCommand()) {
 					cmd.Connection = conn;
 					cmd.CommandType = CommandType.Text;
 					cmd.CommandText = $"SELECT DISTINCT {COL_APPID} FROM {TABLE_NAME}";
-					using (SqlDataReader reader = cmd.ExecuteReader())
-					{
-						while (reader.Read())
-						{
+					using (SqlDataReader reader = cmd.ExecuteReader()) {
+						while (reader.Read()) {
 							string appName = reader[COL_APPID].ToString();
 							if (!cmbApplicationNames.Items.Contains(appName))
 								cmbApplicationNames.Items.Add(appName);
@@ -696,9 +655,7 @@ public partial class Form1 : Form
 					}
 				}
 			}
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			statusLabel.Text = string.Format("Error refreshing: {0}", ex.Message);
 		}
 	}
@@ -706,16 +663,13 @@ public partial class Form1 : Form
 	private void ClearFilters()
 	{
 		_suspendUpdates = true;
-		try
-		{
+		try {
 			cmbSeverity.SelectedIndex = 0;
 			txtSource.Text = string.Empty;
 			cmbApplicationNames.SelectedIndex = 0;
 			txtMessage.Text = string.Empty;
 
-		}
-		finally
-		{
+		} finally {
 			_suspendUpdates = false;
 		}
 	}
@@ -733,16 +687,6 @@ public partial class Form1 : Form
 		LoadLogItems();
 	}
 
-	private void cmbDbConns_SelectedIndexChanged(object sender, EventArgs e)
-	{
-
-	}
-
-	private void cmbSeverity_DropDownClosed(object sender, EventArgs e)
-	{
-
-	}
-
 	private void cmbApplicationNames_SelectedIndexChanged(object sender, EventArgs e)
 	{
 
@@ -750,7 +694,8 @@ public partial class Form1 : Form
 
 	private void lvLogs_DoubleClick(object sender, EventArgs e)
 	{
-
+		if (lvLogs.SelectedItems.Count == 1)
+			_detailForm.ShowLog(lvLogs.SelectedItems[0].Tag as LogItem);
 	}
 
 	private void btnPageDown_Click(object sender, EventArgs e)
@@ -776,82 +721,6 @@ public partial class Form1 : Form
 			lvLogs.Items.Clear();
 	}
 
-	#region Datasources
-
-	private void btnAddDatasource_Click(object sender, EventArgs e)
-	{
-		try
-		{
-			if (this.DatasourceForm.Run(new DbConn()))
-			{
-				_dbConns.Add(this.DatasourceForm.DbConn);
-				int idx = cmbDbConns.Items.Add(this.DatasourceForm.DbConn);
-				cmbDbConns.SelectedIndex = idx;
-				RefreshFilterLists(true);
-			}
-
-		}
-		catch (Exception ex)
-		{
-			MessageBox.Show($@"(btnAddDatasource_Click) {ex.GetType().Name}: {ex.Message}");
-		}
-	}
-
-	private void btnEditDatasource_Click(object sender, EventArgs e)
-	{
-		try
-		{
-			DbConn datasource = cmbDbConns.SelectedItem as DbConn;
-			if (datasource == null)
-				return;
-
-			int idx = _dbConns.IndexOf(datasource);
-			if (idx == -1)
-			{
-				MessageBox.Show("Error with connection list.");
-				return;
-			}
-
-			if (this.DatasourceForm.Run(datasource))
-			{
-				_dbConns[idx].Apply(this.DatasourceForm.DbConn);
-
-				// If this is set as the default datasource, clear all others
-				if (datasource.IsDefault)
-					for (var i = 0; i < _dbConns.Count; i++)
-						_dbConns[i].IsDefault = (i == idx);
-
-				cmbDbConns.Items[idx] = this.DatasourceForm.DbConn;
-				DbConnChanged();
-				RefreshFilterLists(true);
-			}
-		}
-		catch (Exception ex)
-		{
-			MessageBox.Show(string.Format("(btnAddDatasource_Click) {0}: {1}", ex.GetType().Name, ex.Message));
-		}
-	}
-
-	private void btnDelDatasource_Click(object sender, EventArgs e)
-	{
-		if (cmbDbConns.SelectedItem == null)
-			return;
-
-		if (MessageBox.Show(this, "Delete the selected datasource?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-		{
-			_dbConns.Remove(cmbDbConns.SelectedItem as DbConn);
-			int idx = cmbDbConns.SelectedIndex;
-			cmbDbConns.Items.RemoveAt(idx);
-			if (idx < cmbDbConns.Items.Count)
-				cmbDbConns.SelectedIndex = idx;
-			else
-				cmbDbConns.SelectedIndex = cmbDbConns.Items.Count - 1;
-			RefreshFilterLists(true);
-		}
-	}
-
-	#endregion
-
 	private void SetFormSizeAndPosition(Size windowSize, Point position)
 	{
 		this.Width = (windowSize.Width < 934) ? 934 : windowSize.Width;
@@ -867,22 +736,14 @@ public partial class Form1 : Form
 		int y = position.Y;
 
 		if (x < workingArea.Left)
-		{
 			x = workingArea.Left;
-		}
 		else if (x + this.Width > workingArea.Right)
-		{
 			x = workingArea.Right - this.Width;
-		}
 
 		if (y < workingArea.Top)
-		{
 			y = workingArea.Top;
-		}
 		else if (y + this.Height > workingArea.Bottom)
-		{
 			y = workingArea.Bottom - this.Height;
-		}
 
 		// Set the form's position
 		this.StartPosition = FormStartPosition.Manual;

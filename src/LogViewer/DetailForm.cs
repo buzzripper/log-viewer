@@ -9,12 +9,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data;
+using LogViewer.Config;
 
 namespace LogViewer;
 public partial class DetailForm : Form
 {
 	private const int BottomOffset = 85;
 	private readonly Form1 _mainForm;
+
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+	public DbConn DbConn { get; set; }
 
 	#region Ctors / Forms Events
 
@@ -122,12 +126,12 @@ public partial class DetailForm : Form
 		}
 	}
 
-	private static string LoadException(Guid rowId)
+	private string LoadException(Guid rowId)
 	{
 		try
 		{
 			string sql = string.Format("SELECT Exception FROM Logs WHERE RowId = '{0}'", rowId);
-			using (var conn = new SqlConnection(Form1.ConnStr))
+			using (var conn = new SqlConnection(this.DbConn.ConnString))
 			using (SqlCommand cmd = new SqlCommand(sql, conn))
 			{
 				cmd.CommandType = CommandType.Text;

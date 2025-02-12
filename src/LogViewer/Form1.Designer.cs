@@ -167,7 +167,7 @@ partial class Form1
 		cmbApplicationNames.BackColor = System.Drawing.SystemColors.Window;
 		cmbApplicationNames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 		cmbApplicationNames.FormattingEnabled = true;
-		cmbApplicationNames.Location = new System.Drawing.Point(97, 74);
+		cmbApplicationNames.Location = new System.Drawing.Point(97, 80);
 		cmbApplicationNames.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		cmbApplicationNames.Name = "cmbApplicationNames";
 		cmbApplicationNames.Size = new System.Drawing.Size(276, 23);
@@ -195,7 +195,7 @@ partial class Form1
 		btnAddDatasource.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 		btnAddDatasource.ImageKey = "add_datasource.png";
 		btnAddDatasource.ImageList = imageList1;
-		btnAddDatasource.Location = new System.Drawing.Point(482, 7);
+		btnAddDatasource.Location = new System.Drawing.Point(481, 7);
 		btnAddDatasource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnAddDatasource.Name = "btnAddDatasource";
 		btnAddDatasource.Size = new System.Drawing.Size(30, 26);
@@ -206,7 +206,7 @@ partial class Form1
 		// label8
 		// 
 		label8.AutoSize = true;
-		label8.Location = new System.Drawing.Point(20, 76);
+		label8.Location = new System.Drawing.Point(20, 82);
 		label8.Name = "label8";
 		label8.Size = new System.Drawing.Size(71, 15);
 		label8.TabIndex = 49;
@@ -231,7 +231,7 @@ partial class Form1
 		// 
 		txtMessage.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 		txtMessage.BackColor = System.Drawing.SystemColors.Window;
-		txtMessage.Location = new System.Drawing.Point(463, 74);
+		txtMessage.Location = new System.Drawing.Point(463, 80);
 		txtMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		txtMessage.Name = "txtMessage";
 		txtMessage.Size = new System.Drawing.Size(453, 23);
@@ -240,7 +240,7 @@ partial class Form1
 		// label7
 		// 
 		label7.AutoSize = true;
-		label7.Location = new System.Drawing.Point(389, 76);
+		label7.Location = new System.Drawing.Point(389, 82);
 		label7.Name = "label7";
 		label7.Size = new System.Drawing.Size(56, 15);
 		label7.TabIndex = 46;
@@ -250,7 +250,7 @@ partial class Form1
 		// 
 		txtSource.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 		txtSource.BackColor = System.Drawing.SystemColors.Window;
-		txtSource.Location = new System.Drawing.Point(463, 48);
+		txtSource.Location = new System.Drawing.Point(463, 51);
 		txtSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		txtSource.Name = "txtSource";
 		txtSource.Size = new System.Drawing.Size(453, 23);
@@ -274,7 +274,7 @@ partial class Form1
 		// label6
 		// 
 		label6.AutoSize = true;
-		label6.Location = new System.Drawing.Point(400, 51);
+		label6.Location = new System.Drawing.Point(400, 54);
 		label6.Name = "label6";
 		label6.Size = new System.Drawing.Size(46, 15);
 		label6.TabIndex = 43;
@@ -315,12 +315,12 @@ partial class Form1
 		cmbSeverity.BackColor = System.Drawing.SystemColors.Window;
 		cmbSeverity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 		cmbSeverity.FormattingEnabled = true;
-		cmbSeverity.Location = new System.Drawing.Point(97, 48);
+		cmbSeverity.Location = new System.Drawing.Point(97, 51);
 		cmbSeverity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		cmbSeverity.Name = "cmbSeverity";
 		cmbSeverity.Size = new System.Drawing.Size(276, 23);
 		cmbSeverity.TabIndex = 33;
-		cmbSeverity.DropDownClosed += cmbSeverity_DropDownClosed;
+		cmbSeverity.SelectedIndexChanged += cmbSeverity_SelectedIndexChanged;
 		// 
 		// btnRefresh
 		// 
@@ -340,7 +340,7 @@ partial class Form1
 		// label2
 		// 
 		label2.AutoSize = true;
-		label2.Location = new System.Drawing.Point(37, 50);
+		label2.Location = new System.Drawing.Point(37, 53);
 		label2.Name = "label2";
 		label2.Size = new System.Drawing.Size(51, 15);
 		label2.TabIndex = 32;
@@ -416,12 +416,12 @@ partial class Form1
 		lvLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
 		lvLogs.ForeColor = System.Drawing.Color.White;
 		lvLogs.FullRowSelect = true;
-		lvLogs.Location = new System.Drawing.Point(20, 109);
+		lvLogs.Location = new System.Drawing.Point(20, 118);
 		lvLogs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		lvLogs.MultiSelect = false;
 		lvLogs.Name = "lvLogs";
 		lvLogs.ShowItemToolTips = true;
-		lvLogs.Size = new System.Drawing.Size(896, 410);
+		lvLogs.Size = new System.Drawing.Size(896, 401);
 		lvLogs.TabIndex = 34;
 		lvLogs.UseCompatibleStateImageBehavior = false;
 		lvLogs.View = System.Windows.Forms.View.Details;
@@ -482,6 +482,7 @@ partial class Form1
 		// 
 		AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 		AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+		BackColor = System.Drawing.SystemColors.ControlLight;
 		ClientSize = new System.Drawing.Size(927, 591);
 		Controls.Add(numPageNumber);
 		Controls.Add(btnRefreshFilterLists);

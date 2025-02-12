@@ -1,5 +1,4 @@
-﻿using LogViewer.Data;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 
 namespace LogViewer.Config
@@ -9,12 +8,11 @@ namespace LogViewer.Config
 		public AppConfig()
 		{
 			DbConns = new List<DbConn>();
-			TimerIntervalSecs = 1500;
+			TimerIntervalMs = 1500;
 		}
 
-		public string MRUConnStringName { get; set; }
 		public bool MRUSortAsc { get; set; }
-		public int TimerIntervalSecs { get; set; }
+		public int TimerIntervalMs { get; set; }
 		public bool AutoRefresh { get; set; }
 		public List<DbConn> DbConns { get; set; }
 

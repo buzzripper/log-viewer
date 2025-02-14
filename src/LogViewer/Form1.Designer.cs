@@ -395,7 +395,7 @@ partial class Form1
 		lvLogs.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 		lvLogs.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
 		lvLogs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { colTimestamp, colLevel, colApp, colSource, colMessage });
-		lvLogs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+		lvLogs.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
 		lvLogs.ForeColor = System.Drawing.Color.White;
 		lvLogs.FullRowSelect = true;
 		lvLogs.Location = new System.Drawing.Point(20, 132);

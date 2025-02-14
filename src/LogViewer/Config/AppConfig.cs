@@ -16,6 +16,8 @@ namespace LogViewer.Config
 		public List<DbConn> DbConns { get; set; }
 
 		public Point WindowPosition { get; set; }	
-		public Size WindowSize { get; set; }	
+		public Size WindowSize { get; set; }
+
+		public List<int> ColWidths { get; set; } = new List<int>();
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using LogViewer.Config;
 using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -133,6 +134,7 @@ public partial class Form1 : Form
 			ResetDbConnCombo(appConfig.DbConns);
 			SetFormSizeAndPosition(appConfig.WindowSize, appConfig.WindowPosition);
 			SetSortDirection(appConfig.MRUSortAsc);
+			SetColumnWidths(appConfig.ColWidths);
 
 			cmbSeverity.SelectedIndex = 0;
 			cmbApplicationNames.Items.Insert(0, string.Empty);
@@ -181,6 +183,9 @@ public partial class Form1 : Form
 			appConfig.WindowSize = this.RestoreBounds.Size;
 		}
 
+		foreach(ColumnHeader col in lvLogs.Columns) 
+			appConfig.ColWidths.Add(col.Width);
+
 		ConfigManager.SaveAppConfig(appConfig);
 	}
 
@@ -211,6 +216,14 @@ public partial class Form1 : Form
 		// Set the form's position
 		this.StartPosition = FormStartPosition.Manual;
 		this.Location = new Point(x, y);
+	}
+
+	private void SetColumnWidths(List<int> colWidths)
+	{
+		for (int i = 0; i < colWidths.Count; i++) {
+			if (i < lvLogs.Columns.Count)
+				lvLogs.Columns[i].Width = colWidths[i];
+		}
 	}
 
 	#endregion
@@ -351,9 +364,9 @@ public partial class Form1 : Form
 		errorLevelDisplays[0] = new ErrorLevelDisplay(0, ERRLVL_VERBOSE, Color.White);
 		errorLevelDisplays[1] = new ErrorLevelDisplay(1, ERRLVL_DEBUG, Color.White);
 		errorLevelDisplays[2] = new ErrorLevelDisplay(2, ERRLVL_INFO, Color.White);
-		errorLevelDisplays[3] = new ErrorLevelDisplay(3, ERRLVL_WARN, Color.FromArgb(194, 100, 0));
-		errorLevelDisplays[4] = new ErrorLevelDisplay(4, ERRLVL_ERROR, Color.FromArgb(140, 50, 50));
-		errorLevelDisplays[5] = new ErrorLevelDisplay(5, ERRLVL_FATAL, Color.FromArgb(180, 50, 50));
+		errorLevelDisplays[3] = new ErrorLevelDisplay(3, ERRLVL_WARN, Color.FromArgb(240, 146, 46));
+		errorLevelDisplays[4] = new ErrorLevelDisplay(4, ERRLVL_ERROR, Color.FromArgb(250, 105, 105));
+		errorLevelDisplays[5] = new ErrorLevelDisplay(5, ERRLVL_FATAL, Color.FromArgb(247, 52, 52));
 
 		return errorLevelDisplays;
 	}

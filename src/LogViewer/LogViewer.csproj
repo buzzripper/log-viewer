@@ -8,6 +8,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
 	 <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
 	 <Version>2.0.0</Version>
+	 <ApplicationIcon>LogViewer.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,10 @@
     <None Remove="Resources\arrow_south_24.png" />
     <None Remove="Resources\refresh.png" />
     <None Remove="Resources\Spinner.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="LogViewer.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,5 +63,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if /i &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (&#xD;&#xA;    rmdir /S /Q &quot;C:\Programs\LogViewer\&quot;&#xD;&#xA;    mkdir &quot;C:\Programs\LogViewer\&quot;&#xD;&#xA;    xcopy /Y /E &quot;$(TargetDir)*&quot; &quot;C:\Programs\LogViewer\&quot;&#xD;&#xA;)" />
+  </Target>
 
 </Project>

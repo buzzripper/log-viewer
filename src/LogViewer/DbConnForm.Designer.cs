@@ -42,14 +42,16 @@ partial class DbConnForm
 		label1 = new Label();
 		errorProvider1 = new ErrorProvider(components);
 		btnTest = new Button();
+		picCopyConnStr = new PictureBox();
 		((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
+		((System.ComponentModel.ISupportInitialize)picCopyConnStr).BeginInit();
 		SuspendLayout();
 		// 
 		// ckbIsDefault
 		// 
 		ckbIsDefault.AutoSize = true;
 		ckbIsDefault.CheckAlign = ContentAlignment.MiddleRight;
-		ckbIsDefault.Location = new Point(18, 147);
+		ckbIsDefault.Location = new Point(108, 259);
 		ckbIsDefault.Margin = new Padding(3, 4, 3, 4);
 		ckbIsDefault.Name = "ckbIsDefault";
 		ckbIsDefault.Size = new Size(67, 19);
@@ -90,7 +92,7 @@ partial class DbConnForm
 		txtConnStr.Margin = new Padding(3, 4, 3, 4);
 		txtConnStr.Multiline = true;
 		txtConnStr.Name = "txtConnStr";
-		txtConnStr.Size = new Size(282, 221);
+		txtConnStr.Size = new Size(282, 203);
 		txtConnStr.TabIndex = 20;
 		txtConnStr.TextChanged += txtConnStr_TextChanged;
 		// 
@@ -138,6 +140,19 @@ partial class DbConnForm
 		btnTest.UseVisualStyleBackColor = true;
 		btnTest.Click += btnTest_Click;
 		// 
+		// picCopyConnStr
+		// 
+		picCopyConnStr.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+		picCopyConnStr.BackgroundImage = (Image)resources.GetObject("picCopyConnStr.BackgroundImage");
+		picCopyConnStr.BackgroundImageLayout = ImageLayout.Center;
+		picCopyConnStr.Cursor = Cursors.Hand;
+		picCopyConnStr.Location = new Point(347, 253);
+		picCopyConnStr.Name = "picCopyConnStr";
+		picCopyConnStr.Size = new Size(33, 24);
+		picCopyConnStr.TabIndex = 63;
+		picCopyConnStr.TabStop = false;
+		picCopyConnStr.Click += picCopyConnStr_Click;
+		// 
 		// DbConnForm
 		// 
 		AcceptButton = btnOk;
@@ -153,6 +168,7 @@ partial class DbConnForm
 		Controls.Add(label2);
 		Controls.Add(txtName);
 		Controls.Add(label1);
+		Controls.Add(picCopyConnStr);
 		Icon = (Icon)resources.GetObject("$this.Icon");
 		Margin = new Padding(2);
 		MaximizeBox = false;
@@ -164,6 +180,7 @@ partial class DbConnForm
 		Load += DatasourceForm_Load;
 		Shown += DatasourceForm_Shown;
 		((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
+		((System.ComponentModel.ISupportInitialize)picCopyConnStr).EndInit();
 		ResumeLayout(false);
 		PerformLayout();
 	}
@@ -181,4 +198,5 @@ partial class DbConnForm
 	private Button btnTestConn;
 	private Button button1;
 	private Button btnTest;
+	private PictureBox picCopyConnStr;
 }

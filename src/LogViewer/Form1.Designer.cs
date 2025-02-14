@@ -82,7 +82,7 @@ partial class Form1
 		// numPageNumber
 		// 
 		numPageNumber.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-		numPageNumber.BackColor = System.Drawing.SystemColors.Window;
+		numPageNumber.BackColor = System.Drawing.Color.Silver;
 		numPageNumber.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
 		numPageNumber.Location = new System.Drawing.Point(679, 544);
 		numPageNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -139,13 +139,15 @@ partial class Form1
 		// 
 		// cmbApplicationNames
 		// 
-		cmbApplicationNames.BackColor = System.Drawing.SystemColors.Window;
+		cmbApplicationNames.BackColor = System.Drawing.Color.Silver;
 		cmbApplicationNames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+		cmbApplicationNames.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+		cmbApplicationNames.Font = new System.Drawing.Font("Segoe UI", 12F);
 		cmbApplicationNames.FormattingEnabled = true;
 		cmbApplicationNames.Location = new System.Drawing.Point(91, 80);
 		cmbApplicationNames.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		cmbApplicationNames.Name = "cmbApplicationNames";
-		cmbApplicationNames.Size = new System.Drawing.Size(276, 23);
+		cmbApplicationNames.Size = new System.Drawing.Size(276, 29);
 		cmbApplicationNames.TabIndex = 52;
 		cmbApplicationNames.SelectedIndexChanged += cmbApplicationNames_SelectedIndexChanged;
 		// 
@@ -181,6 +183,8 @@ partial class Form1
 		// label8
 		// 
 		label8.AutoSize = true;
+		label8.BackColor = System.Drawing.Color.Transparent;
+		label8.ForeColor = System.Drawing.SystemColors.Control;
 		label8.Location = new System.Drawing.Point(17, 82);
 		label8.Name = "label8";
 		label8.Size = new System.Drawing.Size(71, 15);
@@ -205,16 +209,20 @@ partial class Form1
 		// txtMessage
 		// 
 		txtMessage.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-		txtMessage.BackColor = System.Drawing.SystemColors.Window;
+		txtMessage.BackColor = System.Drawing.Color.Silver;
+		txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
+		txtMessage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
 		txtMessage.Location = new System.Drawing.Point(463, 80);
 		txtMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		txtMessage.Name = "txtMessage";
-		txtMessage.Size = new System.Drawing.Size(467, 23);
+		txtMessage.Size = new System.Drawing.Size(467, 22);
 		txtMessage.TabIndex = 47;
 		// 
 		// label7
 		// 
 		label7.AutoSize = true;
+		label7.BackColor = System.Drawing.Color.Transparent;
+		label7.ForeColor = System.Drawing.SystemColors.Control;
 		label7.Location = new System.Drawing.Point(389, 82);
 		label7.Name = "label7";
 		label7.Size = new System.Drawing.Size(56, 15);
@@ -224,24 +232,26 @@ partial class Form1
 		// txtSource
 		// 
 		txtSource.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-		txtSource.BackColor = System.Drawing.SystemColors.Window;
+		txtSource.BackColor = System.Drawing.Color.Silver;
+		txtSource.BorderStyle = System.Windows.Forms.BorderStyle.None;
+		txtSource.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
 		txtSource.Location = new System.Drawing.Point(463, 51);
 		txtSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		txtSource.Name = "txtSource";
-		txtSource.Size = new System.Drawing.Size(467, 23);
+		txtSource.Size = new System.Drawing.Size(467, 22);
 		txtSource.TabIndex = 45;
 		// 
 		// btnPageUp
 		// 
 		btnPageUp.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-		btnPageUp.BackColor = System.Drawing.SystemColors.Control;
+		btnPageUp.BackColor = System.Drawing.Color.Gray;
 		btnPageUp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 		btnPageUp.ImageKey = "right_arrow_32.png";
 		btnPageUp.ImageList = imageList1;
 		btnPageUp.Location = new System.Drawing.Point(759, 540);
 		btnPageUp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPageUp.Name = "btnPageUp";
-		btnPageUp.Size = new System.Drawing.Size(39, 30);
+		btnPageUp.Size = new System.Drawing.Size(26, 26);
 		btnPageUp.TabIndex = 44;
 		btnPageUp.UseVisualStyleBackColor = false;
 		btnPageUp.Click += btnPageUp_Click;
@@ -249,6 +259,8 @@ partial class Form1
 		// label6
 		// 
 		label6.AutoSize = true;
+		label6.BackColor = System.Drawing.Color.Transparent;
+		label6.ForeColor = System.Drawing.SystemColors.Control;
 		label6.Location = new System.Drawing.Point(400, 54);
 		label6.Name = "label6";
 		label6.Size = new System.Drawing.Size(46, 15);
@@ -258,14 +270,14 @@ partial class Form1
 		// btnPageDown
 		// 
 		btnPageDown.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-		btnPageDown.BackColor = System.Drawing.SystemColors.Control;
+		btnPageDown.BackColor = System.Drawing.Color.Gray;
 		btnPageDown.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 		btnPageDown.ImageKey = "left_arrow_32.png";
 		btnPageDown.ImageList = imageList1;
-		btnPageDown.Location = new System.Drawing.Point(540, 540);
+		btnPageDown.Location = new System.Drawing.Point(557, 542);
 		btnPageDown.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPageDown.Name = "btnPageDown";
-		btnPageDown.Size = new System.Drawing.Size(39, 30);
+		btnPageDown.Size = new System.Drawing.Size(26, 26);
 		btnPageDown.TabIndex = 42;
 		btnPageDown.UseVisualStyleBackColor = false;
 		btnPageDown.Click += btnPageDown_Click;
@@ -273,10 +285,11 @@ partial class Form1
 		// btnPurgeLogs
 		// 
 		btnPurgeLogs.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-		btnPurgeLogs.BackColor = System.Drawing.SystemColors.Control;
+		btnPurgeLogs.BackColor = System.Drawing.Color.Gray;
 		btnPurgeLogs.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 		btnPurgeLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-		btnPurgeLogs.Location = new System.Drawing.Point(15, 539);
+		btnPurgeLogs.ForeColor = System.Drawing.Color.Black;
+		btnPurgeLogs.Location = new System.Drawing.Point(20, 538);
 		btnPurgeLogs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPurgeLogs.Name = "btnPurgeLogs";
 		btnPurgeLogs.Size = new System.Drawing.Size(118, 28);
@@ -287,19 +300,23 @@ partial class Form1
 		// 
 		// cmbSeverity
 		// 
-		cmbSeverity.BackColor = System.Drawing.SystemColors.Window;
+		cmbSeverity.BackColor = System.Drawing.Color.Silver;
 		cmbSeverity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+		cmbSeverity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+		cmbSeverity.Font = new System.Drawing.Font("Segoe UI", 12F);
 		cmbSeverity.FormattingEnabled = true;
 		cmbSeverity.Location = new System.Drawing.Point(91, 51);
 		cmbSeverity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		cmbSeverity.Name = "cmbSeverity";
-		cmbSeverity.Size = new System.Drawing.Size(276, 23);
+		cmbSeverity.Size = new System.Drawing.Size(276, 29);
 		cmbSeverity.TabIndex = 33;
 		cmbSeverity.SelectedIndexChanged += cmbSeverity_SelectedIndexChanged;
 		// 
 		// label2
 		// 
 		label2.AutoSize = true;
+		label2.BackColor = System.Drawing.Color.Transparent;
+		label2.ForeColor = System.Drawing.SystemColors.Control;
 		label2.Location = new System.Drawing.Point(27, 54);
 		label2.Name = "label2";
 		label2.Size = new System.Drawing.Size(61, 15);
@@ -310,6 +327,7 @@ partial class Form1
 		// 
 		label4.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		label4.AutoSize = true;
+		label4.ForeColor = System.Drawing.Color.White;
 		label4.Location = new System.Drawing.Point(590, 547);
 		label4.Name = "label4";
 		label4.Size = new System.Drawing.Size(83, 15);
@@ -319,7 +337,7 @@ partial class Form1
 		// numPageLength
 		// 
 		numPageLength.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-		numPageLength.BackColor = System.Drawing.SystemColors.Window;
+		numPageLength.BackColor = System.Drawing.Color.Silver;
 		numPageLength.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
 		numPageLength.Location = new System.Drawing.Point(421, 544);
 		numPageLength.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -334,7 +352,7 @@ partial class Form1
 		// 
 		label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		label3.AutoSize = true;
-		label3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+		label3.ForeColor = System.Drawing.Color.White;
 		label3.Location = new System.Drawing.Point(339, 547);
 		label3.Name = "label3";
 		label3.Size = new System.Drawing.Size(76, 15);
@@ -343,6 +361,7 @@ partial class Form1
 		// 
 		// statusStrip1
 		// 
+		statusStrip1.BackColor = System.Drawing.Color.Gray;
 		statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
 		statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { statusLabel, toolLblVersion, toolLblMessage });
 		statusStrip1.Location = new System.Drawing.Point(0, 575);
@@ -358,13 +377,15 @@ partial class Form1
 		// 
 		// toolLblVersion
 		// 
+		toolLblVersion.ForeColor = System.Drawing.Color.White;
 		toolLblVersion.Name = "toolLblVersion";
 		toolLblVersion.Size = new System.Drawing.Size(52, 17);
 		toolLblVersion.Text = "v. 1.0.0.0";
 		// 
 		// toolLblMessage
 		// 
-		toolLblMessage.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+		toolLblMessage.BackColor = System.Drawing.Color.Black;
+		toolLblMessage.ForeColor = System.Drawing.Color.White;
 		toolLblMessage.Name = "toolLblMessage";
 		toolLblMessage.Size = new System.Drawing.Size(95, 17);
 		toolLblMessage.Text = "Auto refresh: Off";
@@ -372,7 +393,7 @@ partial class Form1
 		// lvLogs
 		// 
 		lvLogs.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-		lvLogs.BackColor = System.Drawing.Color.LightGray;
+		lvLogs.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
 		lvLogs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { colTimestamp, colLevel, colApp, colSource, colMessage });
 		lvLogs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
 		lvLogs.ForeColor = System.Drawing.Color.White;
@@ -428,13 +449,15 @@ partial class Form1
 		// 
 		// cmbDbConns
 		// 
-		cmbDbConns.BackColor = System.Drawing.SystemColors.Window;
+		cmbDbConns.BackColor = System.Drawing.Color.Silver;
 		cmbDbConns.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+		cmbDbConns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+		cmbDbConns.Font = new System.Drawing.Font("Segoe UI", 12F);
 		cmbDbConns.FormattingEnabled = true;
 		cmbDbConns.Location = new System.Drawing.Point(92, 7);
 		cmbDbConns.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		cmbDbConns.Name = "cmbDbConns";
-		cmbDbConns.Size = new System.Drawing.Size(275, 23);
+		cmbDbConns.Size = new System.Drawing.Size(275, 29);
 		cmbDbConns.Sorted = true;
 		cmbDbConns.TabIndex = 31;
 		cmbDbConns.SelectedIndexChanged += cmbDbConns_SelectedIndexChanged;
@@ -442,6 +465,8 @@ partial class Form1
 		// label1
 		// 
 		label1.AutoSize = true;
+		label1.BackColor = System.Drawing.Color.Transparent;
+		label1.ForeColor = System.Drawing.SystemColors.Control;
 		label1.Location = new System.Drawing.Point(30, 11);
 		label1.Name = "label1";
 		label1.Size = new System.Drawing.Size(58, 15);
@@ -507,7 +532,7 @@ partial class Form1
 		// 
 		AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 		AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-		BackColor = System.Drawing.SystemColors.ControlLight;
+		BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
 		ClientSize = new System.Drawing.Size(941, 597);
 		Controls.Add(numPageNumber);
 		Controls.Add(btnRefreshFilterLists);
@@ -537,9 +562,10 @@ partial class Form1
 		Controls.Add(picAutoRefresh);
 		Controls.Add(picRefresh);
 		Controls.Add(picSortOrder);
+		Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
 		Margin = new System.Windows.Forms.Padding(2);
 		Name = "Form1";
-		Text = "Form1";
+		Text = "Log Viewer";
 		Activated += Form1_Activated;
 		FormClosing += Form1_FormClosing;
 		Load += Form1_Load;

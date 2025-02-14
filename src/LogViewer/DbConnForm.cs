@@ -125,4 +125,13 @@ public partial class DbConnForm : Form
 			this.Cursor = Cursors.Default;
 		}
 	}
+
+	private void picCopyConnStr_Click(object sender, EventArgs e)
+	{
+		try {
+			Clipboard.SetText(Combine(txtConnStr.Text));
+		} catch (Exception ex) {
+			MessageBox.Show($"Error parsing connections string: {ex.Message}", "Error Copying", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+	}
 }

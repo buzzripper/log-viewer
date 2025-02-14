@@ -35,10 +35,6 @@ public partial class Form1 : Form
 
 	#endregion
 
-	#region Static
-
-	#endregion
-
 	#region Fields
 
 	private DbConnForm _dbConnForm;
@@ -280,7 +276,7 @@ public partial class Form1 : Form
 		picAutoRefresh.Cursor = Cursors.Hand;
 		picSortOrder.Enabled = true;
 		picSortOrder.Cursor = Cursors.Hand;
-		
+
 		_detailForm.ConnString = dbConn.ConnString;
 
 		_currDbConn = dbConn;
@@ -345,9 +341,16 @@ public partial class Form1 : Form
 	{
 		var errorLevelDisplays = new ErrorLevelDisplay[6];
 
-		errorLevelDisplays[0] = new ErrorLevelDisplay(0, ERRLVL_VERBOSE, Color.Black);
-		errorLevelDisplays[1] = new ErrorLevelDisplay(1, ERRLVL_DEBUG, Color.Black);
-		errorLevelDisplays[2] = new ErrorLevelDisplay(2, ERRLVL_INFO, Color.Black);
+		//errorLevelDisplays[0] = new ErrorLevelDisplay(0, ERRLVL_VERBOSE, Color.Black);
+		//errorLevelDisplays[1] = new ErrorLevelDisplay(1, ERRLVL_DEBUG, Color.Black);
+		//errorLevelDisplays[2] = new ErrorLevelDisplay(2, ERRLVL_INFO, Color.Black);
+		//errorLevelDisplays[3] = new ErrorLevelDisplay(3, ERRLVL_WARN, Color.FromArgb(194, 100, 0));
+		//errorLevelDisplays[4] = new ErrorLevelDisplay(4, ERRLVL_ERROR, Color.FromArgb(140, 50, 50));
+		//errorLevelDisplays[5] = new ErrorLevelDisplay(5, ERRLVL_FATAL, Color.FromArgb(180, 50, 50));
+
+		errorLevelDisplays[0] = new ErrorLevelDisplay(0, ERRLVL_VERBOSE, Color.White);
+		errorLevelDisplays[1] = new ErrorLevelDisplay(1, ERRLVL_DEBUG, Color.White);
+		errorLevelDisplays[2] = new ErrorLevelDisplay(2, ERRLVL_INFO, Color.White);
 		errorLevelDisplays[3] = new ErrorLevelDisplay(3, ERRLVL_WARN, Color.FromArgb(194, 100, 0));
 		errorLevelDisplays[4] = new ErrorLevelDisplay(4, ERRLVL_ERROR, Color.FromArgb(140, 50, 50));
 		errorLevelDisplays[5] = new ErrorLevelDisplay(5, ERRLVL_FATAL, Color.FromArgb(180, 50, 50));

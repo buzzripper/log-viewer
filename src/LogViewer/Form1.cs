@@ -131,7 +131,7 @@ public partial class Form1 : Form
 			foreach (var errLevel in _errorLevelDisplays)
 				cmbSeverity.Items.Add(errLevel.Text);
 
-			ResetDbConnCombo(appConfig.DbConns);
+			ResetDbConnCombo(appConfig.DbConns, appConfig);
 			SetFormSizeAndPosition(appConfig.WindowSize, appConfig.WindowPosition);
 			SetSortDirection(appConfig.MRUSortAsc);
 			SetColumnWidths(appConfig.ColWidths);
@@ -168,6 +168,7 @@ public partial class Form1 : Form
 		// Save settings
 		var appConfig = new AppConfig();
 
+		appConfig.MRUDbConnName = _currDbConn?.Name;
 		appConfig.MRUSortAsc = _sortAsc;
 		appConfig.AutoRefresh = timer1.Enabled;
 		appConfig.TimerIntervalMs = timer1.Interval;
@@ -183,7 +184,7 @@ public partial class Form1 : Form
 			appConfig.WindowSize = this.RestoreBounds.Size;
 		}
 
-		foreach(ColumnHeader col in lvLogs.Columns) 
+		foreach (ColumnHeader col in lvLogs.Columns)
 			appConfig.ColWidths.Add(col.Width);
 
 		ConfigManager.SaveAppConfig(appConfig);
@@ -230,7 +231,17 @@ public partial class Form1 : Form
 
 	#region DbConns
 
-	private void ResetDbConnCombo(List<DbConn> dbConns, DbConn selectDbConn = null)
+	private void ResetDbConnCombo(List<DbConn> dbConns, DbConn selectDbConn)
+	{
+		this.ResetDbConnCombo(dbConns, selectDbConn, null);
+	}
+
+	private void ResetDbConnCombo(List<DbConn> dbConns, AppConfig appConfig)
+	{
+		this.ResetDbConnCombo(dbConns, null, appConfig);
+	}
+
+	private void ResetDbConnCombo(List<DbConn> dbConns, DbConn selectDbConn, AppConfig appConfig)
 	{
 		_dbConns = dbConns;
 
@@ -245,13 +256,24 @@ public partial class Form1 : Form
 		if (selectDbConn != null) {
 			cmbDbConns.SelectedItem = selectDbConn;
 		} else {
-			// Select the default connection, if one is set
-			var defaultDbConn = _dbConns.FirstOrDefault(c => c.IsDefault);
-			if (defaultDbConn != null)
-				cmbDbConns.SelectedItem = defaultDbConn;
-			else
-				// No default, simply select the first one
-				cmbDbConns.SelectedIndex = 0;
+			// Select the last used connection, if one is set
+			if (!string.IsNullOrEmpty(appConfig?.MRUDbConnName)) {
+				var mruDbConn = _dbConns.FirstOrDefault(c => c.Name == appConfig.MRUDbConnName);
+				if (mruDbConn != null)
+					cmbDbConns.SelectedItem = mruDbConn;
+				else
+					// No MRU, simply select the first one
+					cmbDbConns.SelectedIndex = 0;
+
+			} else {
+				// No MRU connection, so select the default connection if there is one
+				var defaultDbConn = _dbConns.FirstOrDefault(c => c.IsDefault);
+				if (defaultDbConn != null)
+					cmbDbConns.SelectedItem = defaultDbConn;
+				else
+					// No default, simply select the first one
+					cmbDbConns.SelectedIndex = 0;
+			}
 		}
 	}
 
@@ -343,7 +365,7 @@ public partial class Form1 : Form
 
 		if (MessageBox.Show(this, "Delete the selected datasource?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
 			_dbConns.Remove(cmbDbConns.SelectedItem as DbConn);
-			ResetDbConnCombo(_dbConns);
+			ResetDbConnCombo(_dbConns, null, null);
 			RefreshFilterLists(true);
 		}
 	}
@@ -475,7 +497,7 @@ public partial class Form1 : Form
 					};
 
 					var localTimestamp = logItem.TimeStampUTC.ToLocalTime();
-					var timestampStr = localTimestamp == DateTime.Now.Date ? localTimestamp.ToString("h:mm:ss.fff") : localTimestamp.ToString("h:mm:ss.fff M/d/yy");
+					var timestampStr = localTimestamp.Date == DateTime.Now.Date ? localTimestamp.ToString("h:mm:ss.fff") : localTimestamp.ToString("M/d/yy  h:mm:ss.fff");
 					var errLevelDisplay = _errorLevelDisplays[logItem.LogLevel];
 
 					ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.Application, logItem.Source, logItem.Message });
@@ -615,19 +637,10 @@ public partial class Form1 : Form
 		if (e.Control && e.KeyCode == Keys.R)
 			LoadLogItems();
 	}
-	#endregion
-
-	#region Auto-refresh
-
 
 	private void picAutoRefresh_Click(object sender, EventArgs e)
 	{
 		SetAutoRefresh(!_autoRefresh);
-	}
-
-	private void btnAutoRefresh_Click(object sender, EventArgs e)
-	{
-
 	}
 
 	private void SetAutoRefresh(bool autoRefresh)

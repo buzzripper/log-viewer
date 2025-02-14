@@ -10,6 +10,7 @@ namespace LogViewer.Config
 			DbConns = new List<DbConn>();
 		}
 
+		public string MRUDbConnName { get; set; }
 		public bool MRUSortAsc { get; set; }
 		public int TimerIntervalMs { get; set; }
 		public bool AutoRefresh { get; set; }

@@ -41,7 +41,6 @@ partial class DetailForm
 		btnUp = new Button();
 		txtException = new TextBox();
 		panel1 = new Panel();
-		statusStrip1 = new StatusStrip();
 		label10 = new Label();
 		txtMessage = new TextBox();
 		label5 = new Label();
@@ -166,16 +165,6 @@ partial class DetailForm
 		panel1.Name = "panel1";
 		panel1.Size = new Size(609, 4);
 		panel1.TabIndex = 54;
-		// 
-		// statusStrip1
-		// 
-		statusStrip1.ImageScalingSize = new Size(24, 24);
-		statusStrip1.Location = new Point(0, 300);
-		statusStrip1.Name = "statusStrip1";
-		statusStrip1.Padding = new Padding(1, 0, 10, 0);
-		statusStrip1.Size = new Size(619, 22);
-		statusStrip1.TabIndex = 53;
-		statusStrip1.Text = "statusStrip1";
 		// 
 		// label10
 		// 
@@ -323,7 +312,6 @@ partial class DetailForm
 		Controls.Add(btnUp);
 		Controls.Add(txtException);
 		Controls.Add(panel1);
-		Controls.Add(statusStrip1);
 		Controls.Add(label10);
 		Controls.Add(txtMessage);
 		Controls.Add(label5);
@@ -361,7 +349,6 @@ partial class DetailForm
 	private Button btnUp;
 	private TextBox txtException;
 	private Panel panel1;
-	private StatusStrip statusStrip1;
 	private Label label10;
 	private TextBox txtMessage;
 	private Label label5;

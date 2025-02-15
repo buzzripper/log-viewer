@@ -43,6 +43,7 @@ partial class DbConnForm
 		errorProvider1 = new ErrorProvider(components);
 		btnTest = new Button();
 		picCopyConnStr = new PictureBox();
+		statusStrip1 = new StatusStrip();
 		((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
 		((System.ComponentModel.ISupportInitialize)picCopyConnStr).BeginInit();
 		SuspendLayout();
@@ -153,6 +154,14 @@ partial class DbConnForm
 		picCopyConnStr.TabStop = false;
 		picCopyConnStr.Click += picCopyConnStr_Click;
 		// 
+		// statusStrip1
+		// 
+		statusStrip1.Location = new Point(0, 313);
+		statusStrip1.Name = "statusStrip1";
+		statusStrip1.Size = new Size(410, 22);
+		statusStrip1.TabIndex = 64;
+		statusStrip1.Text = "statusStrip1";
+		// 
 		// DbConnForm
 		// 
 		AcceptButton = btnOk;
@@ -160,6 +169,7 @@ partial class DbConnForm
 		AutoScaleMode = AutoScaleMode.Font;
 		CancelButton = btnCancel;
 		ClientSize = new Size(410, 335);
+		Controls.Add(statusStrip1);
 		Controls.Add(btnTest);
 		Controls.Add(ckbIsDefault);
 		Controls.Add(btnCancel);
@@ -199,4 +209,5 @@ partial class DbConnForm
 	private Button button1;
 	private Button btnTest;
 	private PictureBox picCopyConnStr;
+	private StatusStrip statusStrip1;
 }

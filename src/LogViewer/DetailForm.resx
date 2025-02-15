@@ -121,29 +121,26 @@
   <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EAAACxABrSO9dQAAAAd0SU1FB9kDAxAEHi61aW4AAAAoSURBVDhPYxgFgxD8JxLjBdg0IGOiADaNIEwS
+        DwAACw8BkvkDpQAAAAd0SU1FB9kDAxAEHi61aW4AAAAoSURBVDhPYxgFgxD8JxLjBdg0IGOiADaNIEwS
         oEgzDFCkeRQQBRgYANGbHePRbYMgAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EAAACxABrSO9dQAAAAd0SU1FB98JFA0jNGoStmQAAAAHdEVYdEF1dGhvcgCprsxIAAAADHRFWHREZXNj
+        DwAACw8BkvkDpQAAAAd0SU1FB98JFA0jNGoStmQAAAAHdEVYdEF1dGhvcgCprsxIAAAADHRFWHREZXNj
         cmlwdGlvbgATCSEjAAAACnRFWHRDb3B5cmlnaHQArA/MOgAAAAl0RVh0U29mdHdhcmUAXXD/OgAAAAd0
         RVh0U291cmNlAPX/g+sAAAAIdEVYdENvbW1lbnQA9syWvwAAAAZ0RVh0VGl0bGUAqO7SJwAAAFdJREFU
         OE+lzFEKwCAMBFHvf+loPgK6jrSrhVd0mrRFxBOMDowOjA6MDoxlPPkaR/6eMKZa/voJR1kuOpf2IEtq
         m18uMnyy7MyXGxgdGB0YHRgdGP+L1gGGZMFbU2FFAgAAAABJRU5ErkJggg==
 </value>
   </data>
-  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
   <data name="picCopyMessage.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAACESURBVDhPY0ACPEDsQATGC0yA+DMQ/ycC4wX1QAxShM0F6BgvgBkEA8R4UwKIMQCyQcR68zsQ
-        +wMxCkA2iFhvngfi7UCMArAZRAjsh2IUMGoQCqCtQfFADBOkyCBkMHgNwpaakTEoZe8GYpzAGYhBBhGD
-        k4EYL1AAYmyuQMYaQAwFDAwA10ZdCguEYJ0AAAAASUVORK5CYII=
+        iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAABGdBTUEAALGPC/xhBQAAAIRJREFUOE9j
+        QAI8QOxABMYLTID4MxD/JwLjBfVADFKEzQXoGC+AGQQDxHhTAogxALJBxHrzOxD7AzEKQDaIWG+eB+Lt
+        QIwCsBlECOyHYhQwahAKoK1B8UAME6TIIGQweA3ClpqRMShl7wZinMAZiEEGEYOTgRgvUABibK5AxhpA
+        DAUMDADXRl0KC4RgnQAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="picCopyException.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

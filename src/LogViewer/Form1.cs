@@ -131,10 +131,10 @@ public partial class Form1 : Form
 			foreach (var errLevel in _errorLevelDisplays)
 				cmbSeverity.Items.Add(errLevel.Text);
 
-			ResetDbConnCombo(appConfig.DbConns, appConfig);
 			SetFormSizeAndPosition(appConfig.WindowSize, appConfig.WindowPosition);
 			SetSortDirection(appConfig.MRUSortAsc);
 			SetColumnWidths(appConfig.ColWidths);
+			numPageLength.Value = (appConfig.MRUPageLength > 10) ? appConfig.MRUPageLength : 100;
 
 			cmbSeverity.SelectedIndex = 0;
 			cmbApplicationNames.Items.Insert(0, string.Empty);
@@ -142,6 +142,8 @@ public partial class Form1 : Form
 		} finally {
 			_suspendUpdates = false;
 		}
+
+		ResetDbConnCombo(appConfig.DbConns, appConfig);
 	}
 
 	private Image LoadEmbeddedImage(string resourceName)
@@ -170,6 +172,7 @@ public partial class Form1 : Form
 
 		appConfig.MRUDbConnName = _currDbConn?.Name;
 		appConfig.MRUSortAsc = _sortAsc;
+		appConfig.MRUPageLength = (int)numPageLength.Value;
 		appConfig.AutoRefresh = timer1.Enabled;
 		appConfig.TimerIntervalMs = timer1.Interval;
 
@@ -721,6 +724,14 @@ public partial class Form1 : Form
 		}
 	}
 
+	private void cmbApplicationNames_SelectedIndexChanged(object sender, EventArgs e)
+	{
+		if (!_suspendUpdates) {
+			lvLogs.Focus();
+			LoadLogItems();
+		}
+	}
+
 	private void btnRefreshFilterLists_Click(object sender, EventArgs e)
 	{
 		RefreshFilterLists(true);
@@ -786,12 +797,18 @@ public partial class Form1 : Form
 
 	#endregion
 
-	private void cmbApplicationNames_SelectedIndexChanged(object sender, EventArgs e)
+	private void lvLogs_DoubleClick(object sender, EventArgs e)
 	{
-
+		this.SelectLogEvent();
 	}
 
-	private void lvLogs_DoubleClick(object sender, EventArgs e)
+	private void lvLogs_KeyPress(object sender, KeyPressEventArgs e)
+	{
+		if (e.KeyChar == (char)Keys.Enter)
+			this.SelectLogEvent();
+	}
+
+	private void SelectLogEvent()
 	{
 		if (lvLogs.SelectedItems.Count == 1)
 			_detailForm.ShowLog(lvLogs.SelectedItems[0].Tag as LogEvent);
@@ -818,5 +835,15 @@ public partial class Form1 : Form
 	{
 		if (PurgeLogs())
 			lvLogs.Items.Clear();
+	}
+
+	private void numPageLength_KeyDown(object sender, KeyEventArgs e)
+	{
+	}
+
+	private void numPageLength_KeyPress(object sender, KeyPressEventArgs e)
+	{
+		if (e.KeyChar == (char)Keys.Enter)
+			this.LoadLogItems();
 	}
 }

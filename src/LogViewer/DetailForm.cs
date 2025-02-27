@@ -53,27 +53,27 @@ public partial class DetailForm : Form
 
 	private void btnDown_Click(object sender, EventArgs e)
 	{
-		LogEvent logItem = _mainForm.GetNextLogItem();
-		if (logItem != null)
-			ShowLog(logItem);
+		LogEvent logEvent = _mainForm.GetNextLogItem();
+		if (logEvent != null)
+			ShowLog(logEvent);
 	}
 
 
-	public void ShowLog(LogEvent logItem)
+	public void ShowLog(LogEvent logEvent)
 	{
 		_mainForm.Cursor = Cursors.WaitCursor;
 		try {
-			lblRowId.Text = logItem.Id.ToString();
-			lblTimestamp.Text = logItem.TimeStampUTC.ToString(CultureInfo.InvariantCulture);
-			lblSeverity.Text = logItem.LogLevel.ToString();
-			lblSource.Text = logItem.Source;
-			lblApplication.Text = logItem.Application;
-			txtMessage.Text = logItem.Message;
-			if (logItem.HasException) {
-				if (logItem.ExceptionWasLoaded)
-					txtException.Text = logItem.Exception;
+			lblRowId.Text = logEvent.Id.ToString();
+			lblTimestamp.Text = logEvent.TimeStamp.ToString(CultureInfo.InvariantCulture);
+			lblSeverity.Text = logEvent.LogLevel.ToString();
+			lblSource.Text = logEvent.Source;
+			lblApplication.Text = logEvent.Application;
+			txtMessage.Text = logEvent.Message;
+			if (logEvent.HasException) {
+				if (logEvent.ExceptionWasLoaded)
+					txtException.Text = logEvent.Exception;
 				else
-					txtException.Text = LoadException(logItem.Id);
+					txtException.Text = LoadException(logEvent.Id);
 				ShowException(true);
 				lblException.Visible = true;
 				picCopyException.Visible = true;

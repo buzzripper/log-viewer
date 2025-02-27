@@ -5,7 +5,7 @@ namespace LogViewer;
 public class LogEvent
 {
 	public int Id { get; set; }
-	public DateTime TimeStampUTC { get; set; }
+	public DateTime TimeStamp { get; set; }
 	public int LogLevel { get; set; }
 	public string Application { get; set; }
 	public string UserName { get; set; }

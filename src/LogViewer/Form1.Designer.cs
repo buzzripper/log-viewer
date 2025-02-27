@@ -246,8 +246,7 @@ partial class Form1
 		btnPageUp.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		btnPageUp.BackColor = System.Drawing.SystemColors.Control;
 		btnPageUp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-		btnPageUp.ImageKey = "right_arrow_32.png";
-		btnPageUp.ImageList = imageList1;
+		btnPageUp.Image = (System.Drawing.Image)resources.GetObject("btnPageUp.Image");
 		btnPageUp.Location = new System.Drawing.Point(744, 542);
 		btnPageUp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPageUp.Name = "btnPageUp";
@@ -272,8 +271,7 @@ partial class Form1
 		btnPageDown.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		btnPageDown.BackColor = System.Drawing.SystemColors.Control;
 		btnPageDown.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-		btnPageDown.ImageKey = "left_arrow_32.png";
-		btnPageDown.ImageList = imageList1;
+		btnPageDown.Image = (System.Drawing.Image)resources.GetObject("btnPageDown.Image");
 		btnPageDown.Location = new System.Drawing.Point(648, 542);
 		btnPageDown.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPageDown.Name = "btnPageDown";
@@ -484,7 +482,7 @@ partial class Form1
 		// 
 		picSpinner.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 		picSpinner.Image = (System.Drawing.Image)resources.GetObject("picSpinner.Image");
-		picSpinner.Location = new System.Drawing.Point(905, 113);
+		picSpinner.Location = new System.Drawing.Point(906, 111);
 		picSpinner.Name = "picSpinner";
 		picSpinner.Size = new System.Drawing.Size(24, 24);
 		picSpinner.TabIndex = 57;

@@ -18,7 +18,7 @@ public partial class Form1 : Form
 
 	private const string TABLE_NAME = "Logs.LogEvents";
 	private const string COL_ID = "Id";
-	private const string COL_TIMESTAMPUTC = "TimeStampUTC";
+	private const string COL_TIMESTAMP = "TimeStamp";
 	private const string COL_LOGLEVEL = "LogLevel";
 	private const string COL_APPLICATION = "Application";
 	private const string COL_SOURCE = "Source";
@@ -49,6 +49,7 @@ public partial class Form1 : Form
 	private DbConn _currDbConn;
 	private Image _imgSortAsc;
 	private Image _imgSortDesc;
+	private AppConfig _appConfig;
 
 	#endregion
 
@@ -69,9 +70,9 @@ public partial class Form1 : Form
 		_imgSortDesc = LoadEmbeddedImage("arrow_south_18.png");
 		picAutoRefresh.Left = picSpinner.Left;
 
-		var appConfig = ConfigManager.GetAppConfig();
+		_appConfig = ConfigManager.GetAppConfig();
 
-		PopulateForm(appConfig);
+		PopulateForm(_appConfig);
 
 		Form1_Resize(null, null);
 
@@ -90,6 +91,14 @@ public partial class Form1 : Form
 
 	private void Form1_Shown(object sender, EventArgs e)
 	{
+		this.Cursor = Cursors.WaitCursor;
+		try {
+			ResetDbConnCombo(_appConfig.DbConns, _appConfig);
+		} catch (Exception ex) {
+			MessageBox.Show($"{ex.GetType().Name} getting log items: {ex.Message}");
+		} finally {
+			this.Cursor = Cursors.Default;
+		}
 	}
 
 	private void Form1_Activated(object sender, EventArgs e)
@@ -142,8 +151,6 @@ public partial class Form1 : Form
 		} finally {
 			_suspendUpdates = false;
 		}
-
-		ResetDbConnCombo(appConfig.DbConns, appConfig);
 	}
 
 	private Image LoadEmbeddedImage(string resourceName)
@@ -440,14 +447,14 @@ public partial class Form1 : Form
 	                                (
 	                                  SELECT
 	                                    {COL_ID}, 
-										{COL_TIMESTAMPUTC}, 
+										{COL_TIMESTAMP}, 
 										{COL_LOGLEVEL}, 
 										{COL_APPLICATION}, 
 										{COL_SOURCE}, 
                                         {COL_CORRID}, 
 										{COL_MSG},
 										CASE WHEN {COL_EX} = '' THEN 0 ELSE 1 END AS {COL_HASEX},
-										ROW_NUMBER() OVER (ORDER BY {COL_TIMESTAMPUTC} DESC) AS RowNum
+										ROW_NUMBER() OVER (ORDER BY {COL_TIMESTAMP} DESC) AS RowNum
 	                                  FROM 
 	                                    {TABLE_NAME} WITH(NOLOCK)
 	                                  {sqlWhere}
@@ -456,7 +463,7 @@ public partial class Form1 : Form
 	                                WHERE 
 	                                  RowNum BETWEEN {startRow} AND {endRow}
 	                                ORDER BY 
-	                                  {COL_TIMESTAMPUTC} {orderByDir}";
+	                                  {COL_TIMESTAMP} {orderByDir}";
 
 		using (SqlConnection conn = new SqlConnection(_currDbConn.ConnString))
 		using (SqlCommand cmd = new SqlCommand(sql, conn)) {
@@ -490,7 +497,7 @@ public partial class Form1 : Form
 				while (reader.Read()) {
 					var logItem = new LogEvent {
 						Id = (int)reader[COL_ID],
-						TimeStampUTC = ((DateTime)reader[COL_TIMESTAMPUTC]).ToLocalTime(),
+						TimeStamp = ((DateTime)reader[COL_TIMESTAMP]).ToLocalTime(),
 						LogLevel = (int)reader[COL_LOGLEVEL],
 						Application = reader[COL_APPLICATION].ToString(),
 						Source = reader[COL_SOURCE].ToString(),
@@ -499,14 +506,14 @@ public partial class Form1 : Form
 						HasException = ((int)reader[COL_HASEX] == 1)
 					};
 
-					var localTimestamp = logItem.TimeStampUTC.ToLocalTime();
+					var localTimestamp = logItem.TimeStamp.ToLocalTime();
 					var timestampStr = localTimestamp.Date == DateTime.Now.Date ? localTimestamp.ToString("h:mm:ss.fff") : localTimestamp.ToString("M/d/yy  h:mm:ss.fff");
 					var errLevelDisplay = _errorLevelDisplays[logItem.LogLevel];
 
 					ListViewItem lvItem = new ListViewItem(new[] { timestampStr, errLevelDisplay.Text, logItem.Application, logItem.Source, logItem.Message });
 					lvItem.ImageIndex = errLevelDisplay.ImageIndex;
 					lvItem.ForeColor = errLevelDisplay.TextColor;
-					lvItem.ToolTipText = logItem.TimeStampUTC.ToString("M/d/yy");
+					lvItem.ToolTipText = logItem.TimeStamp.ToString("M/d/yy");
 					lvItem.Tag = logItem;
 
 					lvLogs.Items.Add(lvItem);

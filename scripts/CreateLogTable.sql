@@ -1,46 +1,39 @@
-/*
--- Use master
+USE master;
 
-CREATE LOGIN [LogUser] WITH PASSWORD = 'P@ssword1';
-CREATE LOGIN [LogAdmin] WITH PASSWORD = 'P@ssword1';
+CREATE LOGIN [dyvenix_app] WITH PASSWORD = 'P@ssword1';
+CREATE LOGIN [dyvenix_admin] WITH PASSWORD = 'P@ssword1';
+CREATE LOGIN [dyvenix_logviewer] WITH PASSWORD = 'P@ssword1';
 
--- Use Logs
+Use Dyvenix;
 
-CREATE USER [LogUser] FOR LOGIN [LogUser] WITH DEFAULT_SCHEMA=[dbo];
-GRANT CONNECT TO [LogUser];
+-- Admin
+CREATE USER [dyvenix_admin] FOR LOGIN [dyvenix_app] WITH DEFAULT_SCHEMA=[dbo];
 
-CREATE ROLE [LogWriter];
-GRANT SELECT TO [LogWriter];
-GRANT INSERT TO [LogWriter];
-ALTER ROLE [LogWriter] ADD MEMBER [LogUser];
+-- App user
+CREATE USER [dyvenix_app] FOR LOGIN [dyvenix_app] WITH DEFAULT_SCHEMA=[dbo];
+GRANT CONNECT, SELECT, INSERT TO [dyvenix_app];
 
-CREATE USER [LogAdmin] FOR LOGIN [LogAdmin] WITH DEFAULT_SCHEMA=[dbo];
-GRANT CONNECT TO [LogAdmin];
+-- Log viewer user
+CREATE USER [dyvenix_logviewer] FOR LOGIN [dyvenix_logviewer] WITH DEFAULT_SCHEMA=[Logs];
+GRANT SELECT, DELETE ON SCHEMA::Logs TO [dyvenix_logviewer];
 
---DROP ROLE [LogAdministrator];
---GRANT SELECT TO [LogAdministrator];
---GRANT INSERT TO [LogAdministrator];
-ALTER ROLE [db_owner] ADD MEMBER [LogAdmin];
-*/
 
-CREATE TABLE [Logs](
-	[TimeStamp] [datetime] NULL,
-	[Level] [nvarchar](12) NULL,
-	[LevelValue] [int] NULL,
-	[AppId] [varchar](50) NULL,
-	[SourceContext] [varchar](500) NULL,
-	[UserName] [varchar](50) NULL,
-	[MachineName] [varchar](100) NULL,
-	[CorrelationId] [varchar](50) NULL,
+CREATE TABLE [Logs].[LogEvents](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[TimeStampUTC] [datetime] NULL,
+	[LogLevel] [int] NULL,
+	[Application] [nvarchar](200) NULL,
+	[Source] [nvarchar](200) NULL,
 	[Message] [nvarchar](max) NULL,
+	[CorrelationId] [nvarchar](50) NULL,
 	[Exception] [nvarchar](max) NULL,
-	[RowId] [uniqueidentifier] NULL
+PRIMARY KEY NONCLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
 
-ALTER TABLE [dbo].[Logs] ADD  CONSTRAINT [DF_Logs_RowId]  DEFAULT (newid()) FOR [RowId]
-
-CREATE INDEX IX_TimeStamp ON Logs (TimeStamp);
-CREATE INDEX IX_LevelValue ON Logs (LevelValue);
-CREATE INDEX IX_AppId ON Logs (AppId);
+CREATE NONCLUSTERED INDEX IX_LogEvents_TimeStampUTC ON Logs.LogEvents (TimeStampUTC);
+CREATE NONCLUSTERED INDEX IX_LogEvents_Source ON Logs.LogEvents (Source);
+CREATE NONCLUSTERED INDEX IX_LogEvents_CorrelationId ON Logs.LogEvents (CorrelationId);
 GO

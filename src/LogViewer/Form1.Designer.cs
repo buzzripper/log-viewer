@@ -66,17 +66,16 @@ partial class Form1
 		label1 = new System.Windows.Forms.Label();
 		timer1 = new System.Windows.Forms.Timer(components);
 		toolTip1 = new System.Windows.Forms.ToolTip(components);
-		picSpinner = new System.Windows.Forms.PictureBox();
 		picRefresh = new System.Windows.Forms.PictureBox();
-		picAutoRefresh = new System.Windows.Forms.PictureBox();
 		picSortOrder = new System.Windows.Forms.PictureBox();
+		pnlWait = new WaitPanel();
+		picAutoRefresh = new System.Windows.Forms.PictureBox();
 		((System.ComponentModel.ISupportInitialize)numPageNumber).BeginInit();
 		((System.ComponentModel.ISupportInitialize)numPageLength).BeginInit();
 		statusStrip1.SuspendLayout();
-		((System.ComponentModel.ISupportInitialize)picSpinner).BeginInit();
 		((System.ComponentModel.ISupportInitialize)picRefresh).BeginInit();
-		((System.ComponentModel.ISupportInitialize)picAutoRefresh).BeginInit();
 		((System.ComponentModel.ISupportInitialize)picSortOrder).BeginInit();
+		((System.ComponentModel.ISupportInitialize)picAutoRefresh).BeginInit();
 		SuspendLayout();
 		// 
 		// numPageNumber
@@ -84,7 +83,7 @@ partial class Form1
 		numPageNumber.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		numPageNumber.BackColor = System.Drawing.SystemColors.Window;
 		numPageNumber.ForeColor = System.Drawing.SystemColors.WindowText;
-		numPageNumber.Location = new System.Drawing.Point(679, 544);
+		numPageNumber.Location = new System.Drawing.Point(679, 581);
 		numPageNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		numPageNumber.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
 		numPageNumber.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -215,7 +214,7 @@ partial class Form1
 		txtMessage.Location = new System.Drawing.Point(463, 80);
 		txtMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		txtMessage.Name = "txtMessage";
-		txtMessage.Size = new System.Drawing.Size(467, 22);
+		txtMessage.Size = new System.Drawing.Size(582, 22);
 		txtMessage.TabIndex = 47;
 		// 
 		// label7
@@ -238,7 +237,7 @@ partial class Form1
 		txtSource.Location = new System.Drawing.Point(463, 51);
 		txtSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		txtSource.Name = "txtSource";
-		txtSource.Size = new System.Drawing.Size(467, 22);
+		txtSource.Size = new System.Drawing.Size(582, 22);
 		txtSource.TabIndex = 45;
 		// 
 		// btnPageUp
@@ -247,7 +246,7 @@ partial class Form1
 		btnPageUp.BackColor = System.Drawing.SystemColors.Control;
 		btnPageUp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 		btnPageUp.Image = (System.Drawing.Image)resources.GetObject("btnPageUp.Image");
-		btnPageUp.Location = new System.Drawing.Point(744, 542);
+		btnPageUp.Location = new System.Drawing.Point(744, 579);
 		btnPageUp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPageUp.Name = "btnPageUp";
 		btnPageUp.Size = new System.Drawing.Size(26, 26);
@@ -272,7 +271,7 @@ partial class Form1
 		btnPageDown.BackColor = System.Drawing.SystemColors.Control;
 		btnPageDown.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 		btnPageDown.Image = (System.Drawing.Image)resources.GetObject("btnPageDown.Image");
-		btnPageDown.Location = new System.Drawing.Point(648, 542);
+		btnPageDown.Location = new System.Drawing.Point(648, 579);
 		btnPageDown.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPageDown.Name = "btnPageDown";
 		btnPageDown.Size = new System.Drawing.Size(26, 26);
@@ -287,7 +286,7 @@ partial class Form1
 		btnPurgeLogs.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
 		btnPurgeLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
 		btnPurgeLogs.ForeColor = System.Drawing.SystemColors.ControlText;
-		btnPurgeLogs.Location = new System.Drawing.Point(20, 538);
+		btnPurgeLogs.Location = new System.Drawing.Point(20, 575);
 		btnPurgeLogs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		btnPurgeLogs.Name = "btnPurgeLogs";
 		btnPurgeLogs.Size = new System.Drawing.Size(118, 28);
@@ -326,7 +325,7 @@ partial class Form1
 		label4.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		label4.AutoSize = true;
 		label4.ForeColor = System.Drawing.SystemColors.ControlText;
-		label4.Location = new System.Drawing.Point(563, 547);
+		label4.Location = new System.Drawing.Point(563, 584);
 		label4.Name = "label4";
 		label4.Size = new System.Drawing.Size(83, 15);
 		label4.TabIndex = 38;
@@ -338,7 +337,7 @@ partial class Form1
 		numPageLength.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		numPageLength.BackColor = System.Drawing.SystemColors.Window;
 		numPageLength.ForeColor = System.Drawing.SystemColors.WindowText;
-		numPageLength.Location = new System.Drawing.Point(417, 545);
+		numPageLength.Location = new System.Drawing.Point(417, 582);
 		numPageLength.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 		numPageLength.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
 		numPageLength.Name = "numPageLength";
@@ -353,7 +352,7 @@ partial class Form1
 		label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
 		label3.AutoSize = true;
 		label3.ForeColor = System.Drawing.SystemColors.ControlText;
-		label3.Location = new System.Drawing.Point(339, 547);
+		label3.Location = new System.Drawing.Point(339, 584);
 		label3.Name = "label3";
 		label3.Size = new System.Drawing.Size(76, 15);
 		label3.TabIndex = 36;
@@ -364,10 +363,10 @@ partial class Form1
 		statusStrip1.BackColor = System.Drawing.SystemColors.Control;
 		statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
 		statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { statusLabel, toolLblVersion, toolLblMessage });
-		statusStrip1.Location = new System.Drawing.Point(0, 575);
+		statusStrip1.Location = new System.Drawing.Point(0, 612);
 		statusStrip1.Name = "statusStrip1";
 		statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-		statusStrip1.Size = new System.Drawing.Size(941, 22);
+		statusStrip1.Size = new System.Drawing.Size(1056, 22);
 		statusStrip1.TabIndex = 35;
 		// 
 		// statusLabel
@@ -403,7 +402,7 @@ partial class Form1
 		lvLogs.MultiSelect = false;
 		lvLogs.Name = "lvLogs";
 		lvLogs.ShowItemToolTips = true;
-		lvLogs.Size = new System.Drawing.Size(910, 393);
+		lvLogs.Size = new System.Drawing.Size(1025, 430);
 		lvLogs.SmallImageList = logEventImgList;
 		lvLogs.TabIndex = 34;
 		lvLogs.UseCompatibleStateImageBehavior = false;
@@ -478,45 +477,18 @@ partial class Form1
 		// 
 		timer1.Tick += timer1_Tick;
 		// 
-		// picSpinner
-		// 
-		picSpinner.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-		picSpinner.Image = (System.Drawing.Image)resources.GetObject("picSpinner.Image");
-		picSpinner.Location = new System.Drawing.Point(906, 111);
-		picSpinner.Name = "picSpinner";
-		picSpinner.Size = new System.Drawing.Size(24, 24);
-		picSpinner.TabIndex = 57;
-		picSpinner.TabStop = false;
-		picSpinner.Visible = false;
-		picSpinner.Click += picAutoRefresh_Click;
-		// 
 		// picRefresh
 		// 
 		picRefresh.BackgroundImage = (System.Drawing.Image)resources.GetObject("picRefresh.BackgroundImage");
 		picRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 		picRefresh.Cursor = System.Windows.Forms.Cursors.Hand;
 		picRefresh.Enabled = false;
-		picRefresh.Location = new System.Drawing.Point(19, 103);
+		picRefresh.Location = new System.Drawing.Point(19, 108);
 		picRefresh.Name = "picRefresh";
-		picRefresh.Size = new System.Drawing.Size(37, 31);
+		picRefresh.Size = new System.Drawing.Size(37, 26);
 		picRefresh.TabIndex = 58;
 		picRefresh.TabStop = false;
 		picRefresh.Click += picRefresh_Click;
-		// 
-		// picAutoRefresh
-		// 
-		picAutoRefresh.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-		picAutoRefresh.BackgroundImage = (System.Drawing.Image)resources.GetObject("picAutoRefresh.BackgroundImage");
-		picAutoRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-		picAutoRefresh.Cursor = System.Windows.Forms.Cursors.Hand;
-		picAutoRefresh.Enabled = false;
-		picAutoRefresh.ErrorImage = (System.Drawing.Image)resources.GetObject("picAutoRefresh.ErrorImage");
-		picAutoRefresh.Location = new System.Drawing.Point(875, 108);
-		picAutoRefresh.Name = "picAutoRefresh";
-		picAutoRefresh.Size = new System.Drawing.Size(24, 24);
-		picAutoRefresh.TabIndex = 60;
-		picAutoRefresh.TabStop = false;
-		picAutoRefresh.Click += picAutoRefresh_Click;
 		// 
 		// picSortOrder
 		// 
@@ -529,12 +501,34 @@ partial class Form1
 		picSortOrder.TabIndex = 61;
 		picSortOrder.TabStop = false;
 		// 
+		// pnlWait
+		// 
+		pnlWait.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+		pnlWait.BackColor = System.Drawing.Color.Transparent;
+		pnlWait.Location = new System.Drawing.Point(20, 563);
+		pnlWait.Name = "pnlWait";
+		pnlWait.Size = new System.Drawing.Size(1026, 5);
+		pnlWait.TabIndex = 63;
+		// 
+		// picAutoRefresh
+		// 
+		picAutoRefresh.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+		picAutoRefresh.Image = (System.Drawing.Image)resources.GetObject("picAutoRefresh.Image");
+		picAutoRefresh.Location = new System.Drawing.Point(1015, 575);
+		picAutoRefresh.Name = "picAutoRefresh";
+		picAutoRefresh.Size = new System.Drawing.Size(29, 27);
+		picAutoRefresh.TabIndex = 64;
+		picAutoRefresh.TabStop = false;
+		picAutoRefresh.Click += picAutoRefresh_Click;
+		// 
 		// Form1
 		// 
 		AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 		AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 		BackColor = System.Drawing.SystemColors.Control;
-		ClientSize = new System.Drawing.Size(941, 597);
+		ClientSize = new System.Drawing.Size(1056, 634);
+		Controls.Add(picAutoRefresh);
+		Controls.Add(pnlWait);
 		Controls.Add(numPageNumber);
 		Controls.Add(btnRefreshFilterLists);
 		Controls.Add(btnClearFilters);
@@ -559,8 +553,6 @@ partial class Form1
 		Controls.Add(lvLogs);
 		Controls.Add(cmbDbConns);
 		Controls.Add(label1);
-		Controls.Add(picSpinner);
-		Controls.Add(picAutoRefresh);
 		Controls.Add(picRefresh);
 		Controls.Add(picSortOrder);
 		ForeColor = System.Drawing.SystemColors.ControlText;
@@ -579,10 +571,9 @@ partial class Form1
 		((System.ComponentModel.ISupportInitialize)numPageLength).EndInit();
 		statusStrip1.ResumeLayout(false);
 		statusStrip1.PerformLayout();
-		((System.ComponentModel.ISupportInitialize)picSpinner).EndInit();
 		((System.ComponentModel.ISupportInitialize)picRefresh).EndInit();
-		((System.ComponentModel.ISupportInitialize)picAutoRefresh).EndInit();
 		((System.ComponentModel.ISupportInitialize)picSortOrder).EndInit();
+		((System.ComponentModel.ISupportInitialize)picAutoRefresh).EndInit();
 		ResumeLayout(false);
 		PerformLayout();
 	}
@@ -625,8 +616,8 @@ partial class Form1
 	private System.Windows.Forms.ToolTip toolTip1;
 	private System.Windows.Forms.ImageList imageList1;
 	private System.Windows.Forms.ImageList logEventImgList;
-	private System.Windows.Forms.PictureBox picSpinner;
 	private System.Windows.Forms.PictureBox picRefresh;
-	private System.Windows.Forms.PictureBox picAutoRefresh;
 	private System.Windows.Forms.PictureBox picSortOrder;
+	private WaitPanel pnlWait;
+	private System.Windows.Forms.PictureBox picAutoRefresh;
 }

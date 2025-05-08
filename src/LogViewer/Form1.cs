@@ -68,7 +68,6 @@ public partial class Form1 : Form
 
 		_imgSortAsc = LoadEmbeddedImage("arrow_north_18.png");
 		_imgSortDesc = LoadEmbeddedImage("arrow_south_18.png");
-		picAutoRefresh.Left = picSpinner.Left;
 
 		_appConfig = ConfigManager.GetAppConfig();
 
@@ -299,8 +298,8 @@ public partial class Form1 : Form
 		if (dbConn == null) {
 			btnEditDatasource.Enabled = false;
 			btnDelDatasource.Enabled = false;
-			picSpinner.Enabled = false;
-			picSpinner.Cursor = Cursors.Default;
+			pnlWait.Enabled = false;
+			pnlWait.Cursor = Cursors.Default;
 			picRefresh.Enabled = false;
 			picRefresh.Cursor = Cursors.Default;
 			picAutoRefresh.Enabled = false;
@@ -313,8 +312,8 @@ public partial class Form1 : Form
 
 		btnEditDatasource.Enabled = true;
 		btnDelDatasource.Enabled = true;
-		picSpinner.Enabled = true;
-		picSpinner.Cursor = Cursors.Hand;
+		pnlWait.Enabled = true;
+		pnlWait.Cursor = Cursors.Hand;
 		picRefresh.Enabled = true;
 		picRefresh.Cursor = Cursors.Hand;
 		picAutoRefresh.Enabled = true;
@@ -659,16 +658,16 @@ public partial class Form1 : Form
 			ResetData();
 			timer1.Enabled = true;
 			timer1.Start();
-			picSpinner.Visible = true;
-			picAutoRefresh.Visible = false;
+			pnlWait.Visible = true;
 			toolLblMessage.Text = "Auto refresh: On";
+			pnlWait.Start();
 
 		} else {
+			pnlWait.Stop();
 			timer1.Stop();
 			timer1.Enabled = false;
 			toolLblMessage.Text = "Auto refresh: Off";
-			picSpinner.Visible = false;
-			picAutoRefresh.Visible = true;
+			pnlWait.Visible = false;
 		}
 
 		_autoRefresh = autoRefresh;

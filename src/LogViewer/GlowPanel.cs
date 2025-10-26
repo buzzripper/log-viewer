@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace LogViewer;
 
-public partial class WaitPanel : UserControl
+public partial class GlowPanel : UserControl
 {
     private Timer _pulseTimer;
     private int _frame = 0;
@@ -14,7 +14,7 @@ public partial class WaitPanel : UserControl
     private readonly Color darkBlue = Color.FromArgb(0, 20, 140);
     private readonly Color brightBlue = Color.FromArgb(0, 160, 255);
 
-    public WaitPanel()
+    public GlowPanel()
     {
         _pulseTimer = new Timer();
         _pulseTimer.Interval = 80; // match gif frame speed (100ms)

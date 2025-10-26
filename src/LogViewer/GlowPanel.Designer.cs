@@ -1,6 +1,6 @@
 ﻿namespace LogViewer;
 
-partial class WaitPanel
+partial class GlowPanel
 {
 	/// <summary> 
 	/// Required designer variable.

@@ -66,14 +66,13 @@ partial class Form1
         label1 = new System.Windows.Forms.Label();
         timer1 = new System.Windows.Forms.Timer(components);
         toolTip1 = new System.Windows.Forms.ToolTip(components);
-        picAutoRefresh = new System.Windows.Forms.PictureBox();
         btnSort = new System.Windows.Forms.Button();
         btnRefresh = new System.Windows.Forms.Button();
-        pnlWait = new WaitPanel();
+        pnlGlow = new GlowPanel();
+        btnAutoRefresh = new System.Windows.Forms.Button();
         ((System.ComponentModel.ISupportInitialize)numPageNumber).BeginInit();
         ((System.ComponentModel.ISupportInitialize)numPageLength).BeginInit();
         statusStrip1.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)picAutoRefresh).BeginInit();
         this.SuspendLayout();
         // 
         // numPageNumber
@@ -485,19 +484,6 @@ partial class Form1
         // 
         timer1.Tick += this.timer1_Tick;
         // 
-        // picAutoRefresh
-        // 
-        picAutoRefresh.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        picAutoRefresh.BackgroundImage = (System.Drawing.Image)resources.GetObject("picAutoRefresh.BackgroundImage");
-        picAutoRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-        picAutoRefresh.Location = new System.Drawing.Point(1005, 571);
-        picAutoRefresh.Name = "picAutoRefresh";
-        picAutoRefresh.Size = new System.Drawing.Size(39, 31);
-        picAutoRefresh.TabIndex = 64;
-        picAutoRefresh.TabStop = false;
-        toolTip1.SetToolTip(picAutoRefresh, "Refresh Lock");
-        picAutoRefresh.Click += this.picAutoRefresh_Click;
-        // 
         // btnSort
         // 
         btnSort.BackColor = System.Drawing.SystemColors.Control;
@@ -524,13 +510,24 @@ partial class Form1
         btnRefresh.UseVisualStyleBackColor = true;
         btnRefresh.Click += this.btnRefresh_Click;
         // 
-        // pnlWait
+        // pnlGlow
         // 
-        pnlWait.BackColor = System.Drawing.Color.DarkGray;
-        pnlWait.Location = new System.Drawing.Point(790, 576);
-        pnlWait.Name = "pnlWait";
-        pnlWait.Size = new System.Drawing.Size(191, 38);
-        pnlWait.TabIndex = 66;
+        pnlGlow.BackColor = System.Drawing.Color.DodgerBlue;
+        pnlGlow.Location = new System.Drawing.Point(790, 576);
+        pnlGlow.Name = "pnlGlow";
+        pnlGlow.Size = new System.Drawing.Size(191, 18);
+        pnlGlow.TabIndex = 66;
+        // 
+        // btnAutoRefresh
+        // 
+        btnAutoRefresh.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+        btnAutoRefresh.Image = (System.Drawing.Image)resources.GetObject("btnAutoRefresh.Image");
+        btnAutoRefresh.Location = new System.Drawing.Point(1008, 569);
+        btnAutoRefresh.Name = "btnAutoRefresh";
+        btnAutoRefresh.Size = new System.Drawing.Size(36, 33);
+        btnAutoRefresh.TabIndex = 68;
+        btnAutoRefresh.UseVisualStyleBackColor = true;
+        btnAutoRefresh.Click += this.btnAutoRefresh_Click;
         // 
         // Form1
         // 
@@ -538,9 +535,9 @@ partial class Form1
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.BackColor = System.Drawing.SystemColors.Control;
         this.ClientSize = new System.Drawing.Size(1056, 634);
+        this.Controls.Add(btnAutoRefresh);
         this.Controls.Add(btnSort);
         this.Controls.Add(btnRefresh);
-        this.Controls.Add(picAutoRefresh);
         this.Controls.Add(numPageNumber);
         this.Controls.Add(btnRefreshFilterLists);
         this.Controls.Add(btnClearFilters);
@@ -565,7 +562,7 @@ partial class Form1
         this.Controls.Add(lvLogs);
         this.Controls.Add(cmbDbConns);
         this.Controls.Add(label1);
-        this.Controls.Add(pnlWait);
+        this.Controls.Add(pnlGlow);
         this.ForeColor = System.Drawing.SystemColors.ControlText;
         this.Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
         this.Margin = new System.Windows.Forms.Padding(2);
@@ -581,7 +578,6 @@ partial class Form1
         ((System.ComponentModel.ISupportInitialize)numPageLength).EndInit();
         statusStrip1.ResumeLayout(false);
         statusStrip1.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)picAutoRefresh).EndInit();
         this.ResumeLayout(false);
         this.PerformLayout();
     }
@@ -624,8 +620,8 @@ partial class Form1
 	private System.Windows.Forms.ToolTip toolTip1;
 	private System.Windows.Forms.ImageList imageList1;
 	private System.Windows.Forms.ImageList logEventImgList;
-	private System.Windows.Forms.PictureBox picAutoRefresh;
     private System.Windows.Forms.Button btnRefresh;
-    private WaitPanel pnlWait;
+    private GlowPanel pnlGlow;
     private System.Windows.Forms.Button btnSort;
+    private System.Windows.Forms.Button btnAutoRefresh;
 }

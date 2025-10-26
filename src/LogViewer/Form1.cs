@@ -153,7 +153,7 @@ public partial class Form1 : Form
 
             cmbSeverity.SelectedIndex = 0;
             cmbApplicationNames.Items.Insert(0, string.Empty);
-            InitializeWaitPanel();
+            InitializeGlowPanel();
         }
         finally
         {
@@ -180,13 +180,13 @@ public partial class Form1 : Form
         }
     }
 
-    private void InitializeWaitPanel()
+    private void InitializeGlowPanel()
     {
-        pnlWait.BackColor = Color.Transparent;
-        pnlWait.Top = lvLogs.Top - 10;
-        pnlWait.Left = lvLogs.Left - 10;
-        pnlWait.Width = lvLogs.Width + 20;
-        pnlWait.Height = lvLogs.Height + 20;
+        pnlGlow.BackColor = Color.Transparent;
+        pnlGlow.Top = lvLogs.Top - 10;
+        pnlGlow.Left = lvLogs.Left - 10;
+        pnlGlow.Width = lvLogs.Width + 20;
+        pnlGlow.Height = lvLogs.Height + 20;
     }
 
     #endregion
@@ -331,12 +331,12 @@ public partial class Form1 : Form
         {
             btnEditDatasource.Enabled = false;
             btnDelDatasource.Enabled = false;
-            pnlWait.Enabled = false;
-            pnlWait.Cursor = Cursors.Default;
+            pnlGlow.Enabled = false;
+            pnlGlow.Cursor = Cursors.Default;
             btnRefresh.Enabled = false;
             btnRefresh.Cursor = Cursors.Default;
-            picAutoRefresh.Enabled = false;
-            picAutoRefresh.Cursor = Cursors.Default;
+            btnAutoRefresh.Enabled = false;
+            btnAutoRefresh.Cursor = Cursors.Default;
             btnSort.Enabled = false;
             btnSort.Cursor = Cursors.Default;
 
@@ -345,12 +345,12 @@ public partial class Form1 : Form
 
         btnEditDatasource.Enabled = true;
         btnDelDatasource.Enabled = true;
-        pnlWait.Enabled = true;
-        pnlWait.Cursor = Cursors.Hand;
+        pnlGlow.Enabled = true;
+        pnlGlow.Cursor = Cursors.Hand;
         btnRefresh.Enabled = true;
         btnRefresh.Cursor = Cursors.Hand;
-        picAutoRefresh.Enabled = true;
-        picAutoRefresh.Cursor = Cursors.Hand;
+        btnAutoRefresh.Enabled = true;
+        btnAutoRefresh.Cursor = Cursors.Hand;
         btnSort.Enabled = true;
         btnSort.Cursor = Cursors.Hand;
 
@@ -779,7 +779,7 @@ public partial class Form1 : Form
             LoadLogItems();
     }
 
-    private void picAutoRefresh_Click(object sender, EventArgs e)
+    private void btnAutoRefresh_Click(object sender, EventArgs e)
     {
         SetAutoRefresh(!_autoRefresh);
     }
@@ -791,18 +791,18 @@ public partial class Form1 : Form
             ResetData();
             timer1.Enabled = true;
             timer1.Start();
-            pnlWait.Visible = true;
+            pnlGlow.Visible = true;
             toolLblMessage.Text = "Auto refresh: On";
-            pnlWait.Start();
+            pnlGlow.Start();
 
         }
         else
         {
-            pnlWait.Stop();
+            pnlGlow.Stop();
             timer1.Stop();
             timer1.Enabled = false;
             toolLblMessage.Text = "Auto refresh: Off";
-            pnlWait.Visible = false;
+            pnlGlow.Visible = false;
         }
 
         _autoRefresh = autoRefresh;

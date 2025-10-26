@@ -13,9 +13,9 @@ namespace LogViewer.Config
 		public string MRUDbConnName { get; set; }
 		public bool MRUSortAsc { get; set; }
 		public int MRUPageLength { get; set; }
-		public int TimerIntervalMs { get; set; }
-		public bool AutoRefresh { get; set; }
-		public List<DbConn> DbConns { get; set; }
+		public int AutoRefreshTimerIntervalMs { get; set; }
+        public int AutoRefreshTimeoutTimerIntervalMs { get; set; }
+        public List<DbConn> DbConns { get; set; }
 
 		public Point WindowPosition { get; set; }	
 		public Size WindowSize { get; set; }

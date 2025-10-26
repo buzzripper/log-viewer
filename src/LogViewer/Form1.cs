@@ -45,8 +45,6 @@ public partial class Form1 : Form
     private bool _suspendUpdates;
     private readonly ErrorLevelDisplay[] _errorLevelDisplays;
     private bool _sortAsc;
-    private bool _autoRefresh;
-    private int _timerIntervalMs;
     private List<DbConn> _dbConns;
     private DbConn _currDbConn;
     private AppConfig _appConfig;
@@ -106,7 +104,7 @@ public partial class Form1 : Form
     private void Form1_Activated(object sender, EventArgs e)
     {
         if (this.WindowState == FormWindowState.Minimized)
-            SetAutoRefresh(false);
+            EnableAutoRefresh(false);
     }
 
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -118,8 +116,8 @@ public partial class Form1 : Form
     {
         if (this.WindowState == FormWindowState.Minimized)
         {
-            if (timer1.Enabled)
-                SetAutoRefresh(false);
+            if (autoRefreshTimer.Enabled)
+                EnableAutoRefresh(false);
         }
         else
         {
@@ -139,9 +137,8 @@ public partial class Form1 : Form
         _suspendUpdates = true;
         try
         {
-            _autoRefresh = appConfig.AutoRefresh;
-            _timerIntervalMs = appConfig.TimerIntervalMs > 0 ? appConfig.TimerIntervalMs : 2000;
-            timer1.Interval = _timerIntervalMs;
+            autoRefreshTimer.Interval = appConfig.AutoRefreshTimerIntervalMs > 2000 ? appConfig.AutoRefreshTimerIntervalMs : 2000;
+            autoRefreshTimeoutTimer.Interval = appConfig.AutoRefreshTimeoutTimerIntervalMs > 3000 ? appConfig.AutoRefreshTimeoutTimerIntervalMs : 2000;
 
             foreach (var errLevel in _errorLevelDisplays)
                 cmbSeverity.Items.Add(errLevel.Text);
@@ -201,8 +198,7 @@ public partial class Form1 : Form
         appConfig.MRUDbConnName = _currDbConn?.Name;
         appConfig.MRUSortAsc = _sortAsc;
         appConfig.MRUPageLength = (int)numPageLength.Value;
-        appConfig.AutoRefresh = timer1.Enabled;
-        appConfig.TimerIntervalMs = timer1.Interval;
+        appConfig.AutoRefreshTimerIntervalMs = autoRefreshTimer.Interval;
 
         appConfig.DbConns = _dbConns.ToList();
 
@@ -437,7 +433,13 @@ public partial class Form1 : Form
 
     #region LogEvents
 
-    private void ResetData()
+    private void Form1_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Control && e.KeyCode == Keys.R)
+            LoadLogItems();
+    }
+
+    private void RefreshData()
     {
         numPageNumber.Value = 1;
         this.LoadLogItems();
@@ -460,7 +462,7 @@ public partial class Form1 : Form
         }
         catch (Exception ex)
         {
-            SetAutoRefresh(false);
+            EnableAutoRefresh(false);
             MessageBox.Show(ex.Message);
 
         }
@@ -773,24 +775,18 @@ public partial class Form1 : Form
 
     #region Auto Refresh
 
-    private void Form1_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Control && e.KeyCode == Keys.R)
-            LoadLogItems();
-    }
-
     private void btnAutoRefresh_Click(object sender, EventArgs e)
     {
-        SetAutoRefresh(!_autoRefresh);
+        EnableAutoRefresh(!autoRefreshTimer.Enabled);
     }
 
-    private void SetAutoRefresh(bool autoRefresh)
+    private void EnableAutoRefresh(bool enable)
     {
-        if (autoRefresh)
+        if (enable)
         {
-            ResetData();
-            timer1.Enabled = true;
-            timer1.Start();
+            RefreshData();
+            autoRefreshTimer.Start();
+            autoRefreshTimeoutTimer.Start();
             pnlGlow.Visible = true;
             toolLblMessage.Text = "Auto refresh: On";
             pnlGlow.Start();
@@ -799,41 +795,23 @@ public partial class Form1 : Form
         else
         {
             pnlGlow.Stop();
-            timer1.Stop();
-            timer1.Enabled = false;
+            autoRefreshTimer.Stop();
+            autoRefreshTimeoutTimer.Stop();
             toolLblMessage.Text = "Auto refresh: Off";
             pnlGlow.Visible = false;
+            pnlGlow.Stop();
         }
-
-        _autoRefresh = autoRefresh;
     }
 
     private void timer1_Tick(object sender, EventArgs e)
     {
-        System.Windows.Forms.MethodInvoker refreshDataActionStart = LoadLogItems;
-        cmbApplicationNames.BeginInvoke(refreshDataActionStart);
+        //System.Windows.Forms.MethodInvoker refreshDataActionStart = LoadLogItems;
+        cmbApplicationNames.BeginInvoke(LoadLogItems);
     }
 
-    private void btnSort_Click(object sender, EventArgs e)
+    private void autoRefreshTimeoutTimer_Tick(object sender, EventArgs e)
     {
-        SetSortDirection(!_sortAsc);
-        FillGrid((int)numPageNumber.Value, (int)numPageLength.Value);
-    }
-
-    private void SetSortDirection(bool sortAsc)
-    {
-        if (sortAsc)
-        {
-            btnSort.ImageKey = IMGKEY_SORT_ASC;
-            toolTip1.SetToolTip(btnSort, "Change to Ascending Sort");
-        }
-        else
-        {
-            btnSort.ImageKey = IMGKEY_SORT_DESC;
-            toolTip1.SetToolTip(btnSort, "Change to Descending Sort");
-        }
-
-        _sortAsc = sortAsc;
+        this.EnableAutoRefresh(false);
     }
 
     #endregion
@@ -946,10 +924,32 @@ public partial class Form1 : Form
     private void btnClearFilters_Click(object sender, EventArgs e)
     {
         ClearFilters();
-        this.ResetData();
+        this.RefreshData();
     }
 
     #endregion
+
+    private void btnSort_Click(object sender, EventArgs e)
+    {
+        SetSortDirection(!_sortAsc);
+        FillGrid((int)numPageNumber.Value, (int)numPageLength.Value);
+    }
+
+    private void SetSortDirection(bool sortAsc)
+    {
+        if (sortAsc)
+        {
+            btnSort.ImageKey = IMGKEY_SORT_ASC;
+            toolTip1.SetToolTip(btnSort, "Change to Ascending Sort");
+        }
+        else
+        {
+            btnSort.ImageKey = IMGKEY_SORT_DESC;
+            toolTip1.SetToolTip(btnSort, "Change to Descending Sort");
+        }
+
+        _sortAsc = sortAsc;
+    }
 
     private void lvLogs_DoubleClick(object sender, EventArgs e)
     {
@@ -1008,6 +1008,6 @@ public partial class Form1 : Form
 
     private void btnRefresh_Click(object sender, EventArgs e)
     {
-        ResetData();
+        RefreshData();
     }
 }

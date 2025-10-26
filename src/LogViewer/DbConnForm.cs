@@ -40,6 +40,7 @@ public partial class DbConnForm : Form
 
 		txtName.Text = dbConn.Name;
 		txtConnStr.Text = Split(dbConn.ConnString);
+		ckbIsDefault.Checked = dbConn.IsDefault;
 
 		ShowDialog();
 

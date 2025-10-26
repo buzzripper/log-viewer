@@ -67,15 +67,13 @@ partial class Form1
         timer1 = new System.Windows.Forms.Timer(components);
         toolTip1 = new System.Windows.Forms.ToolTip(components);
         picAutoRefresh = new System.Windows.Forms.PictureBox();
-        picRefresh = new System.Windows.Forms.PictureBox();
-        picSortOrder = new System.Windows.Forms.PictureBox();
+        btnSort = new System.Windows.Forms.Button();
+        btnRefresh = new System.Windows.Forms.Button();
         pnlWait = new WaitPanel();
         ((System.ComponentModel.ISupportInitialize)numPageNumber).BeginInit();
         ((System.ComponentModel.ISupportInitialize)numPageLength).BeginInit();
         statusStrip1.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)picAutoRefresh).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)picRefresh).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)picSortOrder).BeginInit();
         this.SuspendLayout();
         // 
         // numPageNumber
@@ -83,7 +81,7 @@ partial class Form1
         numPageNumber.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
         numPageNumber.BackColor = System.Drawing.SystemColors.Window;
         numPageNumber.ForeColor = System.Drawing.SystemColors.WindowText;
-        numPageNumber.Location = new System.Drawing.Point(679, 581);
+        numPageNumber.Location = new System.Drawing.Point(679, 576);
         numPageNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         numPageNumber.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
         numPageNumber.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -99,7 +97,7 @@ partial class Form1
         btnRefreshFilterLists.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnRefreshFilterLists.ImageKey = "refresh_24_lt.png";
         btnRefreshFilterLists.ImageList = imageList1;
-        btnRefreshFilterLists.Location = new System.Drawing.Point(549, 6);
+        btnRefreshFilterLists.Location = new System.Drawing.Point(669, 9);
         btnRefreshFilterLists.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnRefreshFilterLists.Name = "btnRefreshFilterLists";
         btnRefreshFilterLists.Size = new System.Drawing.Size(30, 27);
@@ -125,13 +123,15 @@ partial class Form1
         imageList1.Images.SetKeyName(9, "left_arrow_32.png");
         imageList1.Images.SetKeyName(10, "right_arrow_32.png");
         imageList1.Images.SetKeyName(11, "Spinner.gif");
+        imageList1.Images.SetKeyName(12, "swap_vert_32_up.png");
+        imageList1.Images.SetKeyName(13, "swap_vert_32_dn.png");
         // 
         // btnClearFilters
         // 
         btnClearFilters.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnClearFilters.ImageKey = "clear_filters_24_lt.png";
         btnClearFilters.ImageList = imageList1;
-        btnClearFilters.Location = new System.Drawing.Point(585, 6);
+        btnClearFilters.Location = new System.Drawing.Point(705, 9);
         btnClearFilters.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnClearFilters.Name = "btnClearFilters";
         btnClearFilters.Size = new System.Drawing.Size(33, 27);
@@ -147,7 +147,7 @@ partial class Form1
         cmbApplicationNames.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         cmbApplicationNames.Font = new System.Drawing.Font("Segoe UI", 12F);
         cmbApplicationNames.FormattingEnabled = true;
-        cmbApplicationNames.Location = new System.Drawing.Point(91, 80);
+        cmbApplicationNames.Location = new System.Drawing.Point(171, 80);
         cmbApplicationNames.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         cmbApplicationNames.Name = "cmbApplicationNames";
         cmbApplicationNames.Size = new System.Drawing.Size(276, 29);
@@ -161,7 +161,7 @@ partial class Form1
         btnDelDatasource.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnDelDatasource.ImageKey = "del_datasource_24_lt.png";
         btnDelDatasource.ImageList = imageList1;
-        btnDelDatasource.Location = new System.Drawing.Point(445, 7);
+        btnDelDatasource.Location = new System.Drawing.Point(565, 10);
         btnDelDatasource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnDelDatasource.Name = "btnDelDatasource";
         btnDelDatasource.Size = new System.Drawing.Size(30, 26);
@@ -176,7 +176,7 @@ partial class Form1
         btnAddDatasource.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnAddDatasource.ImageKey = "add_datasource.png";
         btnAddDatasource.ImageList = imageList1;
-        btnAddDatasource.Location = new System.Drawing.Point(481, 7);
+        btnAddDatasource.Location = new System.Drawing.Point(601, 10);
         btnAddDatasource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnAddDatasource.Name = "btnAddDatasource";
         btnAddDatasource.Size = new System.Drawing.Size(30, 26);
@@ -190,7 +190,7 @@ partial class Form1
         label8.AutoSize = true;
         label8.BackColor = System.Drawing.SystemColors.Control;
         label8.ForeColor = System.Drawing.SystemColors.ControlText;
-        label8.Location = new System.Drawing.Point(17, 82);
+        label8.Location = new System.Drawing.Point(97, 82);
         label8.Name = "label8";
         label8.Size = new System.Drawing.Size(71, 15);
         label8.TabIndex = 49;
@@ -203,7 +203,7 @@ partial class Form1
         btnEditDatasource.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnEditDatasource.ImageKey = "edit_datasource_24_lt.png";
         btnEditDatasource.ImageList = imageList1;
-        btnEditDatasource.Location = new System.Drawing.Point(408, 7);
+        btnEditDatasource.Location = new System.Drawing.Point(528, 10);
         btnEditDatasource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnEditDatasource.Name = "btnEditDatasource";
         btnEditDatasource.Size = new System.Drawing.Size(30, 26);
@@ -218,10 +218,10 @@ partial class Form1
         txtMessage.BackColor = System.Drawing.SystemColors.Window;
         txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
         txtMessage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-        txtMessage.Location = new System.Drawing.Point(463, 80);
+        txtMessage.Location = new System.Drawing.Point(523, 80);
         txtMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         txtMessage.Name = "txtMessage";
-        txtMessage.Size = new System.Drawing.Size(582, 22);
+        txtMessage.Size = new System.Drawing.Size(515, 22);
         txtMessage.TabIndex = 47;
         // 
         // label7
@@ -229,7 +229,7 @@ partial class Form1
         label7.AutoSize = true;
         label7.BackColor = System.Drawing.SystemColors.Control;
         label7.ForeColor = System.Drawing.SystemColors.ControlText;
-        label7.Location = new System.Drawing.Point(389, 82);
+        label7.Location = new System.Drawing.Point(460, 84);
         label7.Name = "label7";
         label7.Size = new System.Drawing.Size(56, 15);
         label7.TabIndex = 46;
@@ -241,10 +241,10 @@ partial class Form1
         txtSource.BackColor = System.Drawing.SystemColors.Window;
         txtSource.BorderStyle = System.Windows.Forms.BorderStyle.None;
         txtSource.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-        txtSource.Location = new System.Drawing.Point(463, 51);
+        txtSource.Location = new System.Drawing.Point(523, 51);
         txtSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         txtSource.Name = "txtSource";
-        txtSource.Size = new System.Drawing.Size(582, 22);
+        txtSource.Size = new System.Drawing.Size(515, 22);
         txtSource.TabIndex = 45;
         // 
         // btnPageUp
@@ -253,7 +253,7 @@ partial class Form1
         btnPageUp.BackColor = System.Drawing.SystemColors.Control;
         btnPageUp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnPageUp.Image = (System.Drawing.Image)resources.GetObject("btnPageUp.Image");
-        btnPageUp.Location = new System.Drawing.Point(744, 579);
+        btnPageUp.Location = new System.Drawing.Point(744, 574);
         btnPageUp.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnPageUp.Name = "btnPageUp";
         btnPageUp.Size = new System.Drawing.Size(26, 26);
@@ -266,7 +266,7 @@ partial class Form1
         label6.AutoSize = true;
         label6.BackColor = System.Drawing.SystemColors.Control;
         label6.ForeColor = System.Drawing.SystemColors.ControlText;
-        label6.Location = new System.Drawing.Point(400, 54);
+        label6.Location = new System.Drawing.Point(471, 56);
         label6.Name = "label6";
         label6.Size = new System.Drawing.Size(46, 15);
         label6.TabIndex = 43;
@@ -278,7 +278,7 @@ partial class Form1
         btnPageDown.BackColor = System.Drawing.SystemColors.Control;
         btnPageDown.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnPageDown.Image = (System.Drawing.Image)resources.GetObject("btnPageDown.Image");
-        btnPageDown.Location = new System.Drawing.Point(648, 579);
+        btnPageDown.Location = new System.Drawing.Point(648, 574);
         btnPageDown.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnPageDown.Name = "btnPageDown";
         btnPageDown.Size = new System.Drawing.Size(26, 26);
@@ -293,7 +293,7 @@ partial class Form1
         btnPurgeLogs.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
         btnPurgeLogs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
         btnPurgeLogs.ForeColor = System.Drawing.SystemColors.ControlText;
-        btnPurgeLogs.Location = new System.Drawing.Point(20, 575);
+        btnPurgeLogs.Location = new System.Drawing.Point(20, 571);
         btnPurgeLogs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         btnPurgeLogs.Name = "btnPurgeLogs";
         btnPurgeLogs.Size = new System.Drawing.Size(118, 28);
@@ -309,7 +309,7 @@ partial class Form1
         cmbSeverity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         cmbSeverity.Font = new System.Drawing.Font("Segoe UI", 12F);
         cmbSeverity.FormattingEnabled = true;
-        cmbSeverity.Location = new System.Drawing.Point(91, 51);
+        cmbSeverity.Location = new System.Drawing.Point(171, 44);
         cmbSeverity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         cmbSeverity.Name = "cmbSeverity";
         cmbSeverity.Size = new System.Drawing.Size(276, 29);
@@ -321,7 +321,7 @@ partial class Form1
         label2.AutoSize = true;
         label2.BackColor = System.Drawing.SystemColors.Control;
         label2.ForeColor = System.Drawing.SystemColors.ControlText;
-        label2.Location = new System.Drawing.Point(27, 54);
+        label2.Location = new System.Drawing.Point(107, 51);
         label2.Name = "label2";
         label2.Size = new System.Drawing.Size(61, 15);
         label2.TabIndex = 32;
@@ -332,7 +332,7 @@ partial class Form1
         label4.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
         label4.AutoSize = true;
         label4.ForeColor = System.Drawing.SystemColors.ControlText;
-        label4.Location = new System.Drawing.Point(563, 584);
+        label4.Location = new System.Drawing.Point(563, 579);
         label4.Name = "label4";
         label4.Size = new System.Drawing.Size(83, 15);
         label4.TabIndex = 38;
@@ -344,7 +344,7 @@ partial class Form1
         numPageLength.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
         numPageLength.BackColor = System.Drawing.SystemColors.Window;
         numPageLength.ForeColor = System.Drawing.SystemColors.WindowText;
-        numPageLength.Location = new System.Drawing.Point(417, 582);
+        numPageLength.Location = new System.Drawing.Point(417, 577);
         numPageLength.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         numPageLength.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
         numPageLength.Name = "numPageLength";
@@ -359,7 +359,7 @@ partial class Form1
         label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
         label3.AutoSize = true;
         label3.ForeColor = System.Drawing.SystemColors.ControlText;
-        label3.Location = new System.Drawing.Point(339, 584);
+        label3.Location = new System.Drawing.Point(339, 579);
         label3.Name = "label3";
         label3.Size = new System.Drawing.Size(76, 15);
         label3.TabIndex = 36;
@@ -404,16 +404,17 @@ partial class Form1
         lvLogs.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
         lvLogs.ForeColor = System.Drawing.Color.White;
         lvLogs.FullRowSelect = true;
-        lvLogs.Location = new System.Drawing.Point(20, 132);
+        lvLogs.Location = new System.Drawing.Point(25, 137);
         lvLogs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         lvLogs.MultiSelect = false;
         lvLogs.Name = "lvLogs";
         lvLogs.ShowItemToolTips = true;
-        lvLogs.Size = new System.Drawing.Size(1025, 430);
+        lvLogs.Size = new System.Drawing.Size(1019, 426);
         lvLogs.SmallImageList = logEventImgList;
         lvLogs.TabIndex = 34;
         lvLogs.UseCompatibleStateImageBehavior = false;
         lvLogs.View = System.Windows.Forms.View.Details;
+        lvLogs.SelectedIndexChanged += this.lvLogs_SelectedIndexChanged;
         lvLogs.DoubleClick += this.lvLogs_DoubleClick;
         lvLogs.KeyPress += this.lvLogs_KeyPress;
         // 
@@ -461,7 +462,7 @@ partial class Form1
         cmbDbConns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         cmbDbConns.Font = new System.Drawing.Font("Segoe UI", 12F);
         cmbDbConns.FormattingEnabled = true;
-        cmbDbConns.Location = new System.Drawing.Point(92, 7);
+        cmbDbConns.Location = new System.Drawing.Point(172, 7);
         cmbDbConns.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         cmbDbConns.Name = "cmbDbConns";
         cmbDbConns.Size = new System.Drawing.Size(275, 29);
@@ -474,7 +475,7 @@ partial class Form1
         label1.AutoSize = true;
         label1.BackColor = System.Drawing.SystemColors.Control;
         label1.ForeColor = System.Drawing.SystemColors.ControlText;
-        label1.Location = new System.Drawing.Point(30, 11);
+        label1.Location = new System.Drawing.Point(110, 11);
         label1.Name = "label1";
         label1.Size = new System.Drawing.Size(58, 15);
         label1.TabIndex = 30;
@@ -487,47 +488,49 @@ partial class Form1
         // picAutoRefresh
         // 
         picAutoRefresh.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        picAutoRefresh.Image = (System.Drawing.Image)resources.GetObject("picAutoRefresh.Image");
-        picAutoRefresh.Location = new System.Drawing.Point(1015, 575);
+        picAutoRefresh.BackgroundImage = (System.Drawing.Image)resources.GetObject("picAutoRefresh.BackgroundImage");
+        picAutoRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+        picAutoRefresh.Location = new System.Drawing.Point(1005, 571);
         picAutoRefresh.Name = "picAutoRefresh";
-        picAutoRefresh.Size = new System.Drawing.Size(29, 27);
+        picAutoRefresh.Size = new System.Drawing.Size(39, 31);
         picAutoRefresh.TabIndex = 64;
         picAutoRefresh.TabStop = false;
         toolTip1.SetToolTip(picAutoRefresh, "Refresh Lock");
         picAutoRefresh.Click += this.picAutoRefresh_Click;
         // 
-        // picRefresh
+        // btnSort
         // 
-        picRefresh.BackgroundImage = (System.Drawing.Image)resources.GetObject("picRefresh.BackgroundImage");
-        picRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-        picRefresh.Cursor = System.Windows.Forms.Cursors.Hand;
-        picRefresh.Enabled = false;
-        picRefresh.Location = new System.Drawing.Point(19, 108);
-        picRefresh.Name = "picRefresh";
-        picRefresh.Size = new System.Drawing.Size(37, 26);
-        picRefresh.TabIndex = 58;
-        picRefresh.TabStop = false;
-        picRefresh.Click += this.picRefresh_Click;
+        btnSort.BackColor = System.Drawing.SystemColors.Control;
+        btnSort.Enabled = false;
+        btnSort.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+        btnSort.ImageKey = "swap_vert_32_up.png";
+        btnSort.ImageList = imageList1;
+        btnSort.Location = new System.Drawing.Point(25, 95);
+        btnSort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+        btnSort.Name = "btnSort";
+        btnSort.Size = new System.Drawing.Size(36, 36);
+        btnSort.TabIndex = 67;
+        toolTip1.SetToolTip(btnSort, "Edit Datasource");
+        btnSort.UseVisualStyleBackColor = false;
+        btnSort.Click += this.btnSort_Click;
         // 
-        // picSortOrder
+        // btnRefresh
         // 
-        picSortOrder.BackgroundImage = (System.Drawing.Image)resources.GetObject("picSortOrder.BackgroundImage");
-        picSortOrder.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-        picSortOrder.Cursor = System.Windows.Forms.Cursors.Hand;
-        picSortOrder.Location = new System.Drawing.Point(62, 108);
-        picSortOrder.Name = "picSortOrder";
-        picSortOrder.Size = new System.Drawing.Size(26, 26);
-        picSortOrder.TabIndex = 61;
-        picSortOrder.TabStop = false;
+        btnRefresh.Image = (System.Drawing.Image)resources.GetObject("btnRefresh.Image");
+        btnRefresh.Location = new System.Drawing.Point(20, 25);
+        btnRefresh.Name = "btnRefresh";
+        btnRefresh.Size = new System.Drawing.Size(68, 55);
+        btnRefresh.TabIndex = 65;
+        btnRefresh.UseVisualStyleBackColor = true;
+        btnRefresh.Click += this.btnRefresh_Click;
         // 
         // pnlWait
         // 
-        pnlWait.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        pnlWait.BackColor = System.Drawing.Color.Transparent;
-        pnlWait.Location = new System.Drawing.Point(20, 563);
+        pnlWait.BackColor = System.Drawing.Color.DarkGray;
+        pnlWait.Location = new System.Drawing.Point(790, 576);
         pnlWait.Name = "pnlWait";
-        pnlWait.Size = new System.Drawing.Size(1026, 5);
-        pnlWait.TabIndex = 63;
+        pnlWait.Size = new System.Drawing.Size(191, 38);
+        pnlWait.TabIndex = 66;
         // 
         // Form1
         // 
@@ -535,8 +538,9 @@ partial class Form1
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.BackColor = System.Drawing.SystemColors.Control;
         this.ClientSize = new System.Drawing.Size(1056, 634);
+        this.Controls.Add(btnSort);
+        this.Controls.Add(btnRefresh);
         this.Controls.Add(picAutoRefresh);
-        this.Controls.Add(pnlWait);
         this.Controls.Add(numPageNumber);
         this.Controls.Add(btnRefreshFilterLists);
         this.Controls.Add(btnClearFilters);
@@ -561,8 +565,7 @@ partial class Form1
         this.Controls.Add(lvLogs);
         this.Controls.Add(cmbDbConns);
         this.Controls.Add(label1);
-        this.Controls.Add(picRefresh);
-        this.Controls.Add(picSortOrder);
+        this.Controls.Add(pnlWait);
         this.ForeColor = System.Drawing.SystemColors.ControlText;
         this.Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
         this.Margin = new System.Windows.Forms.Padding(2);
@@ -572,7 +575,6 @@ partial class Form1
         this.FormClosing += this.Form1_FormClosing;
         this.Load += this.Form1_Load;
         this.Shown += this.Form1_Shown;
-        this.Click += this.picRefresh_Click;
         this.KeyDown += this.Form1_KeyDown;
         this.Resize += this.Form1_Resize;
         ((System.ComponentModel.ISupportInitialize)numPageNumber).EndInit();
@@ -580,8 +582,6 @@ partial class Form1
         statusStrip1.ResumeLayout(false);
         statusStrip1.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)picAutoRefresh).EndInit();
-        ((System.ComponentModel.ISupportInitialize)picRefresh).EndInit();
-        ((System.ComponentModel.ISupportInitialize)picSortOrder).EndInit();
         this.ResumeLayout(false);
         this.PerformLayout();
     }
@@ -624,8 +624,8 @@ partial class Form1
 	private System.Windows.Forms.ToolTip toolTip1;
 	private System.Windows.Forms.ImageList imageList1;
 	private System.Windows.Forms.ImageList logEventImgList;
-	private System.Windows.Forms.PictureBox picRefresh;
-	private System.Windows.Forms.PictureBox picSortOrder;
-	private WaitPanel pnlWait;
 	private System.Windows.Forms.PictureBox picAutoRefresh;
+    private System.Windows.Forms.Button btnRefresh;
+    private WaitPanel pnlWait;
+    private System.Windows.Forms.Button btnSort;
 }

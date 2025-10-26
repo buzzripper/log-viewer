@@ -64,10 +64,10 @@ partial class DbConnForm
         // 
         // btnCancel
         // 
-        btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+        btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnCancel.DialogResult = DialogResult.Cancel;
         btnCancel.Font = new Font("Segoe UI", 10F);
-        btnCancel.Location = new Point(265, 302);
+        btnCancel.Location = new Point(432, 300);
         btnCancel.Margin = new Padding(3, 4, 3, 4);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new Size(86, 28);
@@ -78,9 +78,9 @@ partial class DbConnForm
         // 
         // btnOk
         // 
-        btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+        btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnOk.Font = new Font("Segoe UI", 10F);
-        btnOk.Location = new Point(176, 302);
+        btnOk.Location = new Point(343, 300);
         btnOk.Margin = new Padding(3, 4, 3, 4);
         btnOk.Name = "btnOk";
         btnOk.Size = new Size(83, 28);
@@ -128,9 +128,9 @@ partial class DbConnForm
         // 
         btnTest.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         btnTest.Font = new Font("Segoe UI", 10F);
-        btnTest.Location = new Point(18, 302);
+        btnTest.Location = new Point(17, 300);
         btnTest.Name = "btnTest";
-        btnTest.Size = new Size(75, 23);
+        btnTest.Size = new Size(75, 30);
         btnTest.TabIndex = 31;
         btnTest.Text = "Test";
         btnTest.UseVisualStyleBackColor = true;
@@ -170,7 +170,6 @@ partial class DbConnForm
         // 
         // DbConnForm
         // 
-        this.AcceptButton = btnOk;
         this.AutoScaleDimensions = new SizeF(7F, 15F);
         this.AutoScaleMode = AutoScaleMode.Font;
         this.CancelButton = btnCancel;
@@ -211,8 +210,6 @@ partial class DbConnForm
 	private TextBox txtName;
 	private Label label1;
 	private ErrorProvider errorProvider1;
-	private Button btnTestConn;
-	private Button button1;
 	private Button btnTest;
 	private PictureBox picCopyConnStr;
 	private StatusStrip statusStrip1;

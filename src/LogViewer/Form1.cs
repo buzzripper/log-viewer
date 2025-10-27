@@ -42,6 +42,7 @@ public partial class Form1 : Form
 
     private DbConnForm _dbConnForm;
     private DetailForm _detailForm;
+    private OptionsForm _optionsForm;
     private bool _suspendUpdates;
     private readonly ErrorLevelDisplay[] _errorLevelDisplays;
     private bool _sortAsc;
@@ -64,6 +65,7 @@ public partial class Form1 : Form
     {
         _dbConnForm = new DbConnForm();
         _detailForm = new DetailForm(this);
+        _optionsForm = new OptionsForm();
 
         _appConfig = ConfigManager.GetAppConfig();
 
@@ -121,7 +123,7 @@ public partial class Form1 : Form
         }
         else
         {
-            var width = lvLogs.Width - 22;
+            var width = lvLogs.Width - 5;
             for (var i = 0; i < 4; i++)
                 width -= lvLogs.Columns[i].Width;
             lvLogs.Columns[4].Width = width;
@@ -158,24 +160,24 @@ public partial class Form1 : Form
         }
     }
 
-    private Image LoadEmbeddedImage(string resourceName)
-    {
-        var resourceFullName = $"LogViewer.Resources.{resourceName}";
+    //private Image LoadEmbeddedImage(string resourceName)
+    //{
+    //    var resourceFullName = $"LogViewer.Resources.{resourceName}";
 
-        Assembly assembly = Assembly.GetExecutingAssembly();
+    //    Assembly assembly = Assembly.GetExecutingAssembly();
 
-        using (var stream = assembly.GetManifestResourceStream(resourceFullName))
-        {
-            if (stream != null)
-            {
-                return Image.FromStream(stream);
-            }
-            else
-            {
-                throw new Exception("Resource not found: " + resourceName);
-            }
-        }
-    }
+    //    using (var stream = assembly.GetManifestResourceStream(resourceFullName))
+    //    {
+    //        if (stream != null)
+    //        {
+    //            return Image.FromStream(stream);
+    //        }
+    //        else
+    //        {
+    //            throw new Exception("Resource not found: " + resourceName);
+    //        }
+    //    }
+    //}
 
     private void InitializeGlowPanel()
     {
@@ -184,6 +186,7 @@ public partial class Form1 : Form
         pnlGlow.Left = lvLogs.Left - 10;
         pnlGlow.Width = lvLogs.Width + 20;
         pnlGlow.Height = lvLogs.Height + 20;
+        pnlGlow.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
     }
 
     #endregion
@@ -199,6 +202,7 @@ public partial class Form1 : Form
         appConfig.MRUSortAsc = _sortAsc;
         appConfig.MRUPageLength = (int)numPageLength.Value;
         appConfig.AutoRefreshTimerIntervalMs = autoRefreshTimer.Interval;
+        appConfig.AutoRefreshTimeoutTimerIntervalMs = autoRefreshTimeoutTimer.Interval;
 
         appConfig.DbConns = _dbConns.ToList();
 
@@ -322,27 +326,21 @@ public partial class Form1 : Form
 
     private void SetDbConn(DbConn dbConn)
     {
-
         if (dbConn == null)
         {
             btnEditDatasource.Enabled = false;
             btnDelDatasource.Enabled = false;
-            pnlGlow.Enabled = false;
-            pnlGlow.Cursor = Cursors.Default;
             btnRefresh.Enabled = false;
             btnRefresh.Cursor = Cursors.Default;
             btnAutoRefresh.Enabled = false;
             btnAutoRefresh.Cursor = Cursors.Default;
             btnSort.Enabled = false;
             btnSort.Cursor = Cursors.Default;
-
             return;
         }
 
         btnEditDatasource.Enabled = true;
         btnDelDatasource.Enabled = true;
-        pnlGlow.Enabled = true;
-        pnlGlow.Cursor = Cursors.Hand;
         btnRefresh.Enabled = true;
         btnRefresh.Cursor = Cursors.Hand;
         btnAutoRefresh.Enabled = true;
@@ -352,12 +350,12 @@ public partial class Form1 : Form
 
         _detailForm.ConnString = dbConn.ConnString;
 
-        _currDbConn = dbConn;
-
-        if (_currDbConn != dbConn)
+        if (_currDbConn?.Id != dbConn?.Id)
         {
+            _currDbConn = dbConn;
             OpenConn(true);
             ResetApplicationFilterList();
+            EnableAutoRefresh(false);
         }
 
         if (!_suspendUpdates)
@@ -479,17 +477,15 @@ public partial class Form1 : Form
             _conn?.Dispose();
             _conn = null;
         }
+
+        if (_conn != null)
+        {
+            if (_conn.State == ConnectionState.Open)
+                return;
+        }
         else
         {
-            if (_conn != null)
-            {
-                if (_conn.State == ConnectionState.Open)
-                    return;
-            }
-            else
-            {
-                _conn = new SqlConnection(_currDbConn.ConnString);
-            }
+            _conn = new SqlConnection(_currDbConn.ConnString);
         }
 
         try
@@ -985,4 +981,17 @@ public partial class Form1 : Form
     {
         RefreshData();
     }
+    
+    #region Options
+
+    private void btnOptions_Click(object sender, EventArgs e)
+    {
+        if (_optionsForm.Run(_appConfig) == DialogResult.OK)
+        {
+            autoRefreshTimer.Interval = _appConfig.AutoRefreshTimerIntervalMs;
+            autoRefreshTimeoutTimer.Interval = _appConfig.AutoRefreshTimeoutTimerIntervalMs;
+        }
+    }
+
+    #endregion
 }

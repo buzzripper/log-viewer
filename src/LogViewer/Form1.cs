@@ -734,8 +734,8 @@ public partial class Form1 : Form
 
     private void ResetAutoRefreshTimeoutTimer()
     {
-        autoRefreshTimer.Stop();
-        autoRefreshTimer.Start();
+        autoRefreshTimeoutTimer.Stop();
+        autoRefreshTimeoutTimer.Start();
     }
 
     #endregion

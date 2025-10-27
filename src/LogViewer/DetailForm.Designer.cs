@@ -40,7 +40,6 @@ partial class DetailForm
         button1 = new Button();
         btnUp = new Button();
         txtException = new TextBox();
-        panel1 = new Panel();
         label10 = new Label();
         txtMessage = new TextBox();
         label5 = new Label();
@@ -52,64 +51,65 @@ partial class DetailForm
         label1 = new Label();
         picCopyMessage = new PictureBox();
         picCopyException = new PictureBox();
+        splitContainer1 = new SplitContainer();
+        btnClose = new Button();
         ((System.ComponentModel.ISupportInitialize)picLogLevel).BeginInit();
         ((System.ComponentModel.ISupportInitialize)picCopyMessage).BeginInit();
         ((System.ComponentModel.ISupportInitialize)picCopyException).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+        splitContainer1.Panel1.SuspendLayout();
+        splitContainer1.Panel2.SuspendLayout();
+        splitContainer1.SuspendLayout();
         this.SuspendLayout();
         // 
         // label7
         // 
+        label7.AutoSize = true;
         label7.ImageAlign = ContentAlignment.MiddleRight;
-        label7.Location = new Point(340, 4);
-        label7.Margin = new Padding(2, 0, 2, 0);
+        label7.Location = new Point(284, 12);
         label7.Name = "label7";
-        label7.Size = new Size(74, 13);
+        label7.Size = new Size(94, 18);
         label7.TabIndex = 61;
         label7.Text = "Application:";
         label7.TextAlign = ContentAlignment.MiddleRight;
         // 
         // lblApplication
         // 
-        lblApplication.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         lblApplication.AutoSize = true;
         lblApplication.ImageAlign = ContentAlignment.BottomLeft;
-        lblApplication.Location = new Point(415, 4);
-        lblApplication.Margin = new Padding(2, 0, 2, 0);
+        lblApplication.Location = new Point(384, 12);
         lblApplication.Name = "lblApplication";
-        lblApplication.Size = new Size(81, 15);
+        lblApplication.Size = new Size(102, 18);
         lblApplication.TabIndex = 60;
         lblApplication.Text = "lblApplication";
         lblApplication.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // lblSource
         // 
-        lblSource.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         lblSource.AutoSize = true;
         lblSource.ImageAlign = ContentAlignment.BottomLeft;
-        lblSource.Location = new Point(415, 19);
-        lblSource.Margin = new Padding(2, 0, 2, 0);
+        lblSource.Location = new Point(384, 31);
         lblSource.Name = "lblSource";
-        lblSource.Size = new Size(97, 15);
+        lblSource.Size = new Size(135, 18);
         lblSource.TabIndex = 59;
         lblSource.Text = "lblSourceContext";
         // 
         // lblException
         // 
         lblException.AutoSize = true;
-        lblException.Location = new Point(15, 177);
-        lblException.Margin = new Padding(2, 0, 2, 0);
+        lblException.Location = new Point(13, 11);
         lblException.Name = "lblException";
-        lblException.Size = new Size(61, 15);
+        lblException.Size = new Size(80, 18);
         lblException.TabIndex = 57;
-        lblException.Text = "Exception:";
+        lblException.Text = "Exception";
         lblException.TextAlign = ContentAlignment.MiddleRight;
         // 
         // picLogLevel
         // 
-        picLogLevel.Location = new Point(4, 3);
-        picLogLevel.Margin = new Padding(2);
+        picLogLevel.Location = new Point(5, 4);
+        picLogLevel.Margin = new Padding(3, 2, 3, 2);
         picLogLevel.Name = "picLogLevel";
-        picLogLevel.Size = new Size(11, 10);
+        picLogLevel.Size = new Size(14, 12);
         picLogLevel.TabIndex = 56;
         picLogLevel.TabStop = false;
         // 
@@ -119,10 +119,10 @@ partial class DetailForm
         button1.BackColor = Color.Transparent;
         button1.FlatAppearance.BorderSize = 0;
         button1.Image = (Image)resources.GetObject("button1.Image");
-        button1.Location = new Point(584, 31);
-        button1.Margin = new Padding(2);
+        button1.Location = new Point(734, 37);
+        button1.Margin = new Padding(3, 2, 3, 2);
         button1.Name = "button1";
-        button1.Size = new Size(24, 24);
+        button1.Size = new Size(31, 29);
         button1.TabIndex = 48;
         button1.UseVisualStyleBackColor = false;
         button1.Click += this.btnDown_Click;
@@ -133,74 +133,62 @@ partial class DetailForm
         btnUp.BackColor = Color.Transparent;
         btnUp.FlatAppearance.BorderSize = 0;
         btnUp.Image = (Image)resources.GetObject("btnUp.Image");
-        btnUp.Location = new Point(584, 4);
-        btnUp.Margin = new Padding(2);
+        btnUp.Location = new Point(734, 5);
+        btnUp.Margin = new Padding(3, 2, 3, 2);
         btnUp.Name = "btnUp";
-        btnUp.Size = new Size(24, 24);
+        btnUp.Size = new Size(31, 29);
         btnUp.TabIndex = 47;
         btnUp.UseVisualStyleBackColor = false;
         btnUp.Click += this.btnUp_Click;
         // 
         // txtException
         // 
-        txtException.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        txtException.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         txtException.BackColor = SystemColors.Control;
         txtException.BorderStyle = BorderStyle.FixedSingle;
-        txtException.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        txtException.Location = new Point(15, 196);
-        txtException.Margin = new Padding(2);
+        txtException.Font = new Font("Verdana", 11F);
+        txtException.Location = new Point(13, 35);
+        txtException.Margin = new Padding(3, 2, 3, 2);
         txtException.Multiline = true;
         txtException.Name = "txtException";
         txtException.ScrollBars = ScrollBars.Vertical;
-        txtException.Size = new Size(589, 91);
+        txtException.Size = new Size(751, 199);
         txtException.TabIndex = 55;
-        txtException.Visible = false;
-        // 
-        // panel1
-        // 
-        panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        panel1.BorderStyle = BorderStyle.Fixed3D;
-        panel1.Location = new Point(6, 62);
-        panel1.Margin = new Padding(2);
-        panel1.Name = "panel1";
-        panel1.Size = new Size(609, 4);
-        panel1.TabIndex = 54;
         // 
         // label10
         // 
+        label10.AutoSize = true;
         label10.ImageAlign = ContentAlignment.MiddleRight;
-        label10.Location = new Point(356, 19);
-        label10.Margin = new Padding(2, 0, 2, 0);
+        label10.Location = new Point(311, 31);
         label10.Name = "label10";
-        label10.Size = new Size(57, 13);
+        label10.Size = new Size(67, 18);
         label10.TabIndex = 49;
         label10.Text = "Source:";
         label10.TextAlign = ContentAlignment.MiddleRight;
         // 
         // txtMessage
         // 
-        txtMessage.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        txtMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         txtMessage.BackColor = SystemColors.Control;
         txtMessage.BorderStyle = BorderStyle.FixedSingle;
-        txtMessage.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        txtMessage.Location = new Point(15, 88);
-        txtMessage.Margin = new Padding(2);
+        txtMessage.Font = new Font("Verdana", 11F);
+        txtMessage.Location = new Point(13, 33);
+        txtMessage.Margin = new Padding(3, 2, 3, 2);
         txtMessage.Multiline = true;
         txtMessage.Name = "txtMessage";
         txtMessage.ReadOnly = true;
         txtMessage.ScrollBars = ScrollBars.Vertical;
-        txtMessage.Size = new Size(589, 85);
+        txtMessage.Size = new Size(751, 213);
         txtMessage.TabIndex = 46;
         // 
         // label5
         // 
         label5.AutoSize = true;
-        label5.Location = new Point(15, 73);
-        label5.Margin = new Padding(2, 0, 2, 0);
+        label5.Location = new Point(13, 12);
         label5.Name = "label5";
-        label5.Size = new Size(56, 15);
+        label5.Size = new Size(73, 18);
         label5.TabIndex = 45;
-        label5.Text = "Message:";
+        label5.Text = "Message";
         label5.TextAlign = ContentAlignment.MiddleRight;
         // 
         // lblSeverity
@@ -208,20 +196,19 @@ partial class DetailForm
         lblSeverity.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         lblSeverity.AutoSize = true;
         lblSeverity.ImageAlign = ContentAlignment.BottomLeft;
-        lblSeverity.Location = new Point(81, 33);
-        lblSeverity.Margin = new Padding(2, 0, 2, 0);
+        lblSeverity.Location = new Point(104, 50);
         lblSeverity.Name = "lblSeverity";
-        lblSeverity.Size = new Size(61, 15);
+        lblSeverity.Size = new Size(84, 18);
         lblSeverity.TabIndex = 44;
         lblSeverity.Text = "lblSeverity";
         // 
         // label4
         // 
+        label4.AutoSize = true;
         label4.ImageAlign = ContentAlignment.MiddleRight;
-        label4.Location = new Point(0, 33);
-        label4.Margin = new Padding(2, 0, 2, 0);
+        label4.Location = new Point(14, 50);
         label4.Name = "label4";
-        label4.Size = new Size(80, 15);
+        label4.Size = new Size(85, 18);
         label4.TabIndex = 43;
         label4.Text = "Log Level:";
         label4.TextAlign = ContentAlignment.MiddleRight;
@@ -231,20 +218,19 @@ partial class DetailForm
         lblTimestamp.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         lblTimestamp.AutoSize = true;
         lblTimestamp.ImageAlign = ContentAlignment.BottomLeft;
-        lblTimestamp.Location = new Point(81, 19);
-        lblTimestamp.Margin = new Padding(2, 0, 2, 0);
+        lblTimestamp.Location = new Point(104, 31);
         lblTimestamp.Name = "lblTimestamp";
-        lblTimestamp.Size = new Size(80, 15);
+        lblTimestamp.Size = new Size(106, 18);
         lblTimestamp.TabIndex = 42;
         lblTimestamp.Text = "lblTimestamp";
         // 
         // label3
         // 
+        label3.AutoSize = true;
         label3.ImageAlign = ContentAlignment.MiddleRight;
-        label3.Location = new Point(6, 18);
-        label3.Margin = new Padding(2, 0, 2, 0);
+        label3.Location = new Point(1, 30);
         label3.Name = "label3";
-        label3.Size = new Size(72, 13);
+        label3.Size = new Size(98, 18);
         label3.TabIndex = 41;
         label3.Text = "Timestamp:";
         label3.TextAlign = ContentAlignment.MiddleRight;
@@ -254,20 +240,19 @@ partial class DetailForm
         lblRowId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         lblRowId.AutoSize = true;
         lblRowId.ImageAlign = ContentAlignment.BottomLeft;
-        lblRowId.Location = new Point(81, 4);
-        lblRowId.Margin = new Padding(2, 0, 2, 0);
+        lblRowId.Location = new Point(104, 12);
         lblRowId.Name = "lblRowId";
-        lblRowId.Size = new Size(53, 15);
+        lblRowId.Size = new Size(70, 18);
         lblRowId.TabIndex = 40;
         lblRowId.Text = "lblRowId";
         // 
         // label1
         // 
+        label1.AutoSize = true;
         label1.ImageAlign = ContentAlignment.MiddleRight;
-        label1.Location = new Point(26, 4);
-        label1.Margin = new Padding(2, 0, 2, 0);
+        label1.Location = new Point(70, 12);
         label1.Name = "label1";
-        label1.Size = new Size(51, 13);
+        label1.Size = new Size(29, 18);
         label1.TabIndex = 39;
         label1.Text = "Id:";
         label1.TextAlign = ContentAlignment.MiddleRight;
@@ -278,9 +263,10 @@ partial class DetailForm
         picCopyMessage.BackgroundImage = (Image)resources.GetObject("picCopyMessage.BackgroundImage");
         picCopyMessage.BackgroundImageLayout = ImageLayout.Center;
         picCopyMessage.Cursor = Cursors.Hand;
-        picCopyMessage.Location = new Point(551, 64);
+        picCopyMessage.Location = new Point(735, 4);
+        picCopyMessage.Margin = new Padding(4);
         picCopyMessage.Name = "picCopyMessage";
-        picCopyMessage.Size = new Size(33, 24);
+        picCopyMessage.Size = new Size(42, 29);
         picCopyMessage.TabIndex = 62;
         picCopyMessage.TabStop = false;
         picCopyMessage.Click += this.picCopyMessage_Click;
@@ -291,49 +277,90 @@ partial class DetailForm
         picCopyException.BackgroundImage = (Image)resources.GetObject("picCopyException.BackgroundImage");
         picCopyException.BackgroundImageLayout = ImageLayout.Center;
         picCopyException.Cursor = Cursors.Hand;
-        picCopyException.Location = new Point(551, 172);
+        picCopyException.Location = new Point(735, 4);
+        picCopyException.Margin = new Padding(4);
         picCopyException.Name = "picCopyException";
-        picCopyException.Size = new Size(33, 24);
+        picCopyException.Size = new Size(42, 29);
         picCopyException.TabIndex = 63;
         picCopyException.TabStop = false;
         picCopyException.Click += this.picCopyException_Click;
         // 
+        // splitContainer1
+        // 
+        splitContainer1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        splitContainer1.Location = new Point(1, 83);
+        splitContainer1.Name = "splitContainer1";
+        splitContainer1.Orientation = Orientation.Horizontal;
+        // 
+        // splitContainer1.Panel1
+        // 
+        splitContainer1.Panel1.BackColor = SystemColors.Control;
+        splitContainer1.Panel1.Controls.Add(label5);
+        splitContainer1.Panel1.Controls.Add(picCopyMessage);
+        splitContainer1.Panel1.Controls.Add(txtMessage);
+        // 
+        // splitContainer1.Panel2
+        // 
+        splitContainer1.Panel2.BackColor = SystemColors.Control;
+        splitContainer1.Panel2.Controls.Add(txtException);
+        splitContainer1.Panel2.Controls.Add(picCopyException);
+        splitContainer1.Panel2.Controls.Add(lblException);
+        splitContainer1.Size = new Size(777, 499);
+        splitContainer1.SplitterDistance = 252;
+        splitContainer1.TabIndex = 64;
+        // 
+        // btnClose
+        // 
+        btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        btnClose.Location = new Point(690, 590);
+        btnClose.Name = "btnClose";
+        btnClose.Size = new Size(75, 31);
+        btnClose.TabIndex = 65;
+        btnClose.Text = "Close";
+        btnClose.UseVisualStyleBackColor = true;
+        btnClose.Click += this.btnClose_Click;
+        // 
         // DetailForm
         // 
-        this.AutoScaleDimensions = new SizeF(7F, 15F);
+        this.AutoScaleDimensions = new SizeF(9F, 18F);
         this.AutoScaleMode = AutoScaleMode.Font;
-        this.ClientSize = new Size(619, 322);
+        this.BackColor = SystemColors.Control;
+        this.CancelButton = btnClose;
+        this.ClientSize = new Size(779, 629);
+        this.ControlBox = false;
+        this.Controls.Add(btnClose);
+        this.Controls.Add(splitContainer1);
         this.Controls.Add(label7);
         this.Controls.Add(lblApplication);
         this.Controls.Add(lblSource);
-        this.Controls.Add(lblException);
         this.Controls.Add(picLogLevel);
         this.Controls.Add(button1);
         this.Controls.Add(btnUp);
-        this.Controls.Add(txtException);
-        this.Controls.Add(panel1);
         this.Controls.Add(label10);
-        this.Controls.Add(txtMessage);
-        this.Controls.Add(label5);
         this.Controls.Add(lblSeverity);
         this.Controls.Add(label4);
         this.Controls.Add(lblTimestamp);
         this.Controls.Add(label3);
         this.Controls.Add(lblRowId);
         this.Controls.Add(label1);
-        this.Controls.Add(picCopyMessage);
-        this.Controls.Add(picCopyException);
-        this.Margin = new Padding(2);
+        this.Font = new Font("Verdana", 11F, FontStyle.Regular, GraphicsUnit.Point, 0);
+        this.Margin = new Padding(3, 2, 3, 2);
         this.MaximizeBox = false;
         this.MinimizeBox = false;
         this.Name = "DetailForm";
         this.StartPosition = FormStartPosition.CenterParent;
-        this.Text = "DetailForm";
+        this.Text = "Log Detail";
         this.Load += this.DetailForm_Load;
         this.Shown += this.DetailForm_Shown;
         ((System.ComponentModel.ISupportInitialize)picLogLevel).EndInit();
         ((System.ComponentModel.ISupportInitialize)picCopyMessage).EndInit();
         ((System.ComponentModel.ISupportInitialize)picCopyException).EndInit();
+        splitContainer1.Panel1.ResumeLayout(false);
+        splitContainer1.Panel1.PerformLayout();
+        splitContainer1.Panel2.ResumeLayout(false);
+        splitContainer1.Panel2.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+        splitContainer1.ResumeLayout(false);
         this.ResumeLayout(false);
         this.PerformLayout();
     }
@@ -348,7 +375,6 @@ partial class DetailForm
 	private Button button1;
 	private Button btnUp;
 	private TextBox txtException;
-	private Panel panel1;
 	private Label label10;
 	private TextBox txtMessage;
 	private Label label5;
@@ -360,4 +386,6 @@ partial class DetailForm
 	private Label label1;
 	private PictureBox picCopyMessage;
 	private PictureBox picCopyException;
+    private SplitContainer splitContainer1;
+    private Button btnClose;
 }

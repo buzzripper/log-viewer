@@ -505,36 +505,8 @@ public partial class Form1 : Form
 
     private void FillGrid(int pageNumber, int pageSize)
     {
-        //int startRow = ((startPage - 1) * pageLength) + 1;
-        //int endRow = startRow + pageLength;
         string sqlWhere = BuildWhereClause();
         string orderByDir = _sortAsc ? "DESC" : "ASC";
-
-        /*
-        string sql = $@"SELECT 
-	                                  MasterRowNums.*
-	                                FROM
-	                                (
-	                                  SELECT
-	                                    {COL_ID}, 
-										{COL_TIMESTAMP}, 
-										{COL_LOGLEVEL}, 
-										{COL_APPLICATION}, 
-										{COL_SOURCE}, 
-                                        {COL_CORRID}, 
-										{COL_MSG},
-										CASE WHEN {COL_EX} = '' THEN 0 ELSE 1 END AS {COL_HASEX},
-										ROW_NUMBER() OVER (ORDER BY {COL_TIMESTAMP} {orderByDir}) AS RowNum
-	                                  FROM 
-	                                    {TABLE_NAME} WITH(NOLOCK)
-	                                  {sqlWhere}
-	                                ) 
-	                                  MasterRowNums
-	                                WHERE 
-	                                  RowNum BETWEEN {startRow} AND {endRow}
-	                                ORDER BY 
-	                                  {COL_TIMESTAMP} {orderByDir}";
-        */
 
         var sql = $@"
             SELECT 
@@ -545,7 +517,10 @@ public partial class Form1 : Form
                 [Source],
                 [CorrelationId],
                 [Message],
-                CASE WHEN Exception = '' THEN 0 ELSE 1 END AS HasException
+                CASE 
+                    WHEN Exception IS NULL OR LEN(LTRIM(RTRIM(Exception))) = 0 THEN 0 
+                    ELSE 1 
+                END AS HasException
             FROM 
                 Logs.LogEvents
             {sqlWhere}

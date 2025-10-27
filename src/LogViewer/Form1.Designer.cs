@@ -30,7 +30,6 @@ partial class Form1
     {
         components = new System.ComponentModel.Container();
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-        numPageNumber = new System.Windows.Forms.NumericUpDown();
         btnRefreshFilterLists = new System.Windows.Forms.Button();
         imageList1 = new System.Windows.Forms.ImageList(components);
         btnClearFilters = new System.Windows.Forms.Button();
@@ -72,26 +71,11 @@ partial class Form1
         btnAutoRefresh = new System.Windows.Forms.Button();
         autoRefreshTimeoutTimer = new System.Windows.Forms.Timer(components);
         btnOptions = new System.Windows.Forms.Button();
-        ((System.ComponentModel.ISupportInitialize)numPageNumber).BeginInit();
+        numPageNumber = new System.Windows.Forms.NumericUpDown();
         ((System.ComponentModel.ISupportInitialize)numPageLength).BeginInit();
         statusStrip1.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)numPageNumber).BeginInit();
         this.SuspendLayout();
-        // 
-        // numPageNumber
-        // 
-        numPageNumber.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-        numPageNumber.BackColor = System.Drawing.SystemColors.Window;
-        numPageNumber.ForeColor = System.Drawing.SystemColors.WindowText;
-        numPageNumber.Location = new System.Drawing.Point(469, 495);
-        numPageNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        numPageNumber.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-        numPageNumber.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-        numPageNumber.Name = "numPageNumber";
-        numPageNumber.Size = new System.Drawing.Size(59, 23);
-        numPageNumber.TabIndex = 56;
-        numPageNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-        numPageNumber.Value = new decimal(new int[] { 1, 0, 0, 0 });
-        numPageNumber.ValueChanged += this.numPageNumber_ValueChanged;
         // 
         // btnRefreshFilterLists
         // 
@@ -417,7 +401,6 @@ partial class Form1
         lvLogs.TabIndex = 34;
         lvLogs.UseCompatibleStateImageBehavior = false;
         lvLogs.View = System.Windows.Forms.View.Details;
-        lvLogs.SelectedIndexChanged += this.lvLogs_SelectedIndexChanged;
         lvLogs.DoubleClick += this.lvLogs_DoubleClick;
         lvLogs.KeyPress += this.lvLogs_KeyPress;
         // 
@@ -487,7 +470,7 @@ partial class Form1
         // autoRefreshTimer
         // 
         autoRefreshTimer.Interval = 1000;
-        autoRefreshTimer.Tick += this.timer1_Tick;
+        autoRefreshTimer.Tick += this.autoRefreshTimer_Tick;
         // 
         // btnSort
         // 
@@ -553,17 +536,31 @@ partial class Form1
         btnOptions.UseVisualStyleBackColor = true;
         btnOptions.Click += this.btnOptions_Click;
         // 
+        // numPageNumber
+        // 
+        numPageNumber.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+        numPageNumber.BackColor = System.Drawing.SystemColors.Window;
+        numPageNumber.ForeColor = System.Drawing.SystemColors.WindowText;
+        numPageNumber.Location = new System.Drawing.Point(471, 497);
+        numPageNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+        numPageNumber.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+        numPageNumber.Name = "numPageNumber";
+        numPageNumber.Size = new System.Drawing.Size(58, 23);
+        numPageNumber.TabIndex = 70;
+        numPageNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+        numPageNumber.Value = new decimal(new int[] { 1, 0, 0, 0 });
+        // 
         // Form1
         // 
         this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.BackColor = System.Drawing.SystemColors.Control;
         this.ClientSize = new System.Drawing.Size(958, 555);
+        this.Controls.Add(numPageNumber);
         this.Controls.Add(btnOptions);
         this.Controls.Add(btnAutoRefresh);
         this.Controls.Add(btnSort);
         this.Controls.Add(btnRefresh);
-        this.Controls.Add(numPageNumber);
         this.Controls.Add(btnRefreshFilterLists);
         this.Controls.Add(btnClearFilters);
         this.Controls.Add(cmbApplicationNames);
@@ -599,18 +596,17 @@ partial class Form1
         this.Shown += this.Form1_Shown;
         this.KeyDown += this.Form1_KeyDown;
         this.Resize += this.Form1_Resize;
-        ((System.ComponentModel.ISupportInitialize)numPageNumber).EndInit();
         ((System.ComponentModel.ISupportInitialize)numPageLength).EndInit();
         statusStrip1.ResumeLayout(false);
         statusStrip1.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)numPageNumber).EndInit();
         this.ResumeLayout(false);
         this.PerformLayout();
     }
 
     #endregion
 
-    private System.Windows.Forms.NumericUpDown numPageNumber;
-	private System.Windows.Forms.Button btnRefreshFilterLists;
+    private System.Windows.Forms.Button btnRefreshFilterLists;
 	private System.Windows.Forms.Button btnClearFilters;
 	private System.Windows.Forms.ComboBox cmbApplicationNames;
 	private System.Windows.Forms.Button btnDelDatasource;
@@ -651,4 +647,5 @@ partial class Form1
     private System.Windows.Forms.Button btnAutoRefresh;
     private System.Windows.Forms.Timer autoRefreshTimeoutTimer;
     private System.Windows.Forms.Button btnOptions;
+    private System.Windows.Forms.NumericUpDown numPageNumber;
 }

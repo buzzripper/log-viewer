@@ -68,11 +68,10 @@ public partial class Form1 : Form
         _optionsForm = new OptionsForm();
 
         _appConfig = ConfigManager.GetAppConfig();
+        _dbConns = _appConfig.DbConns;
 
         PopulateForm(_appConfig);
-
         Form1_Resize(null, null);
-
         lvLogs.Focus();
 
         //if (ApplicationDeployment.IsNetworkDeployed)
@@ -91,7 +90,17 @@ public partial class Form1 : Form
         this.Cursor = Cursors.WaitCursor;
         try
         {
-            ResetDbConnCombo(_appConfig.DbConns, _appConfig);
+            RefreshDbConnCombo();
+
+            DbConn dbConn = null;
+            if (_appConfig?.MRUDbConnId != Guid.Empty)
+                //Select the last used connection, if one is set
+                dbConn = _dbConns.FirstOrDefault(d => d.Id == _appConfig.MRUDbConnId);
+            else
+                // No MRU connection, so select the default connection if there is one
+                dbConn = _dbConns.FirstOrDefault(c => c.IsDefault);
+
+            SelectDbConn(dbConn);
         }
         catch (Exception ex)
         {
@@ -160,25 +169,6 @@ public partial class Form1 : Form
         }
     }
 
-    //private Image LoadEmbeddedImage(string resourceName)
-    //{
-    //    var resourceFullName = $"LogViewer.Resources.{resourceName}";
-
-    //    Assembly assembly = Assembly.GetExecutingAssembly();
-
-    //    using (var stream = assembly.GetManifestResourceStream(resourceFullName))
-    //    {
-    //        if (stream != null)
-    //        {
-    //            return Image.FromStream(stream);
-    //        }
-    //        else
-    //        {
-    //            throw new Exception("Resource not found: " + resourceName);
-    //        }
-    //    }
-    //}
-
     private void InitializeGlowPanel()
     {
         pnlGlow.BackColor = Color.Transparent;
@@ -198,7 +188,7 @@ public partial class Form1 : Form
         // Save settings
         var appConfig = new AppConfig();
 
-        appConfig.MRUDbConnName = _currDbConn?.Name;
+        appConfig.MRUDbConnId = _currDbConn?.Id ?? Guid.Empty;
         appConfig.MRUSortAsc = _sortAsc;
         appConfig.MRUPageLength = (int)numPageLength.Value;
         appConfig.AutoRefreshTimerIntervalMs = autoRefreshTimer.Interval;
@@ -266,67 +256,30 @@ public partial class Form1 : Form
 
     #region DbConns
 
-    private void ResetDbConnCombo(List<DbConn> dbConns, DbConn selectDbConn)
+    private void SelectDbConn(DbConn dbConn)
     {
-        this.ResetDbConnCombo(dbConns, selectDbConn, null);
+        if (dbConn == null)
+            cmbDbConns.SelectedIndex = 0;
+        else
+            cmbDbConns.SelectedItem = dbConn;
     }
 
-    private void ResetDbConnCombo(List<DbConn> dbConns, AppConfig appConfig)
+    private void RefreshDbConnCombo()
     {
-        this.ResetDbConnCombo(dbConns, null, appConfig);
-    }
-
-    private void ResetDbConnCombo(List<DbConn> dbConns, DbConn selectDbConn, AppConfig appConfig)
-    {
-        _dbConns = dbConns;
-
         cmbDbConns.Items.Clear();
-
         foreach (var dbConn in _dbConns)
             cmbDbConns.Items.Add(dbConn);
-
-        if (_dbConns.Count == 0)
-            return;
-
-        if (selectDbConn != null)
-        {
-            cmbDbConns.SelectedItem = selectDbConn;
-        }
-        else
-        {
-            // Select the last used connection, if one is set
-            if (!string.IsNullOrEmpty(appConfig?.MRUDbConnName))
-            {
-                var mruDbConn = _dbConns.FirstOrDefault(c => c.Name == appConfig.MRUDbConnName);
-                if (mruDbConn != null)
-                    cmbDbConns.SelectedItem = mruDbConn;
-                else
-                    // No MRU, simply select the first one
-                    cmbDbConns.SelectedIndex = 0;
-
-            }
-            else
-            {
-                // No MRU connection, so select the default connection if there is one
-                var defaultDbConn = _dbConns.FirstOrDefault(c => c.IsDefault);
-                if (defaultDbConn != null)
-                    cmbDbConns.SelectedItem = defaultDbConn;
-                else
-                    // No default, simply select the first one
-                    cmbDbConns.SelectedIndex = 0;
-            }
-        }
     }
 
     private void cmbDbConns_SelectedIndexChanged(object sender, EventArgs e)
     {
-        SetDbConn(cmbDbConns.SelectedItem as DbConn);
+        DbConnSelected(cmbDbConns.SelectedItem as DbConn);
         lvLogs.Focus();
     }
 
-    private void SetDbConn(DbConn dbConn)
+    private void DbConnSelected(DbConn dbConn)
     {
-        if (dbConn == null)
+        if (dbConn == null || dbConn.Id == Guid.Empty)
         {
             btnEditDatasource.Enabled = false;
             btnDelDatasource.Enabled = false;
@@ -336,6 +289,7 @@ public partial class Form1 : Form
             btnAutoRefresh.Cursor = Cursors.Default;
             btnSort.Enabled = false;
             btnSort.Cursor = Cursors.Default;
+            btnPurgeLogs.Enabled = false;
             return;
         }
 
@@ -347,21 +301,25 @@ public partial class Form1 : Form
         btnAutoRefresh.Cursor = Cursors.Hand;
         btnSort.Enabled = true;
         btnSort.Cursor = Cursors.Hand;
+        btnPurgeLogs.Enabled = true;
 
         _detailForm.ConnString = dbConn.ConnString;
 
         if (_currDbConn?.Id != dbConn?.Id)
         {
             _currDbConn = dbConn;
-            OpenConn(true);
+            _conn = null;
             ResetApplicationFilterList();
             EnableAutoRefresh(false);
+            lvLogs.Items.Clear();
         }
 
         if (!_suspendUpdates)
         {
-            LoadLogItems();
-            RefreshFilterLists(true);
+            if (LoadLogItems())
+                RefreshFilterLists(true);
+            else
+                SelectDbConn(null);
         }
     }
 
@@ -369,16 +327,15 @@ public partial class Form1 : Form
     {
         try
         {
-            var dbConn = new DbConn();
+            var dbConn = new DbConn { Id = Guid.NewGuid() };
 
             if (_dbConnForm.Run(dbConn) == DialogResult.OK)
             {
                 _dbConns.Add(dbConn);
-                ResetDbConnCombo(_dbConns, dbConn);
+                RefreshDbConnCombo();
                 RefreshFilterLists(true);
-                //SetDbConn(dbConn);
+                SelectDbConn(dbConn);
             }
-
         }
         catch (Exception ex)
         {
@@ -396,7 +353,6 @@ public partial class Form1 : Form
 
             if (_dbConnForm.Run(dbConn) == DialogResult.OK)
             {
-                ResetDbConnCombo(_dbConns, dbConn);
                 if (dbConn.IsDefault)
                 {
                     foreach (var otherConn in _dbConns)
@@ -406,6 +362,7 @@ public partial class Form1 : Form
                     }
                 }
                 RefreshFilterLists(true);
+                RefreshDbConnCombo();
             }
         }
         catch (Exception ex)
@@ -422,8 +379,9 @@ public partial class Form1 : Form
         if (MessageBox.Show(this, "Delete the selected datasource?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
             _dbConns.Remove(cmbDbConns.SelectedItem as DbConn);
-            ResetDbConnCombo(_dbConns, null, null);
+            RefreshDbConnCombo();
             RefreshFilterLists(true);
+            SelectDbConn(null);
         }
     }
 
@@ -448,28 +406,6 @@ public partial class Form1 : Form
         LoadLogItems();
     }
 
-    private void LoadLogItems()
-    {
-        this.Cursor = Cursors.WaitCursor;
-        try
-        {
-            Refresh();
-            FillGrid((int)numPageNumber.Value, (int)numPageLength.Value);
-            toolLblMessage.Text = null;
-
-        }
-        catch (Exception ex)
-        {
-            EnableAutoRefresh(false);
-            MessageBox.Show(ex.Message);
-
-        }
-        finally
-        {
-            this.Cursor = Cursors.Default;
-        }
-    }
-
     private void OpenConn(bool closeExisting = false)
     {
         if (closeExisting)
@@ -488,14 +424,28 @@ public partial class Form1 : Form
             _conn = new SqlConnection(_currDbConn.ConnString);
         }
 
+        _conn.Open();
+    }
+
+    private bool LoadLogItems()
+    {
+        this.Cursor = Cursors.WaitCursor;
         try
         {
-            _conn.Open();
+            this.Refresh();
+            FillGrid((int)numPageNumber.Value, (int)numPageLength.Value);
+            toolLblMessage.Text = null;
+            return true;
         }
-        catch
+        catch (Exception ex)
         {
-            // DB was probably re-created since the last calll, let's try once more
-            _conn.Open();
+            EnableAutoRefresh(false);
+            MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
+        }
+        finally
+        {
+            this.Cursor = Cursors.Default;
         }
     }
 
@@ -503,8 +453,7 @@ public partial class Form1 : Form
     {
         string sqlWhere = BuildWhereClause();
         string orderByDir = _sortAsc ? "DESC" : "ASC";
-
-        var sql = $@"
+        string sql = $@"
             SELECT 
                 [Id],
                 [Timestamp],
@@ -538,7 +487,6 @@ public partial class Form1 : Form
             try
             {
                 reader = cmd.ExecuteReader();
-
             }
             catch (SqlException sqlEx)
             {
@@ -761,7 +709,6 @@ public partial class Form1 : Form
             pnlGlow.Visible = true;
             toolLblMessage.Text = "Auto refresh: On";
             pnlGlow.Start();
-
         }
         else
         {
@@ -774,15 +721,21 @@ public partial class Form1 : Form
         }
     }
 
-    private void timer1_Tick(object sender, EventArgs e)
+    private void autoRefreshTimer_Tick(object sender, EventArgs e)
     {
-        //System.Windows.Forms.MethodInvoker refreshDataActionStart = LoadLogItems;
+        //System.Windows.Forms.MethodInvoker loadLogItemsInvoker = LoadLogItems;
         cmbApplicationNames.BeginInvoke(LoadLogItems);
     }
 
     private void autoRefreshTimeoutTimer_Tick(object sender, EventArgs e)
     {
         this.EnableAutoRefresh(false);
+    }
+
+    private void ResetAutoRefreshTimeoutTimer()
+    {
+        autoRefreshTimer.Stop();
+        autoRefreshTimer.Start();
     }
 
     #endregion
@@ -822,12 +775,14 @@ public partial class Form1 : Form
         {
             lvLogs.Focus();
             LoadLogItems();
+            ResetAutoRefreshTimeoutTimer();
         }
     }
 
     private void btnRefreshFilterLists_Click(object sender, EventArgs e)
     {
         RefreshFilterLists(true);
+        ResetAutoRefreshTimeoutTimer();
     }
 
     private void RefreshFilterLists(bool clearLists)
@@ -847,6 +802,7 @@ public partial class Form1 : Form
             ResetApplicationFilterList();
         try
         {
+            OpenConn();
             using (SqlConnection conn = new SqlConnection(_currDbConn.ConnString))
             {
                 conn.Open();
@@ -871,7 +827,7 @@ public partial class Form1 : Form
         }
         catch (Exception ex)
         {
-            statusLabel.Text = string.Format("Error refreshing: {0}", ex.Message);
+            MessageBox.Show($"Error refreshing: {ex.Message}");
         }
     }
 
@@ -896,6 +852,7 @@ public partial class Form1 : Form
     {
         ClearFilters();
         this.RefreshData();
+        ResetAutoRefreshTimeoutTimer();
     }
 
     #endregion
@@ -903,7 +860,7 @@ public partial class Form1 : Form
     private void btnSort_Click(object sender, EventArgs e)
     {
         SetSortDirection(!_sortAsc);
-        FillGrid((int)numPageNumber.Value, (int)numPageLength.Value);
+        this.LoadLogItems();
     }
 
     private void SetSortDirection(bool sortAsc)
@@ -918,8 +875,8 @@ public partial class Form1 : Form
             btnSort.ImageKey = IMGKEY_SORT_DESC;
             toolTip1.SetToolTip(btnSort, "Change to Descending Sort");
         }
-
         _sortAsc = sortAsc;
+        ResetAutoRefreshTimeoutTimer();
     }
 
     private void lvLogs_DoubleClick(object sender, EventArgs e)
@@ -937,6 +894,7 @@ public partial class Form1 : Form
     {
         if (lvLogs.SelectedItems.Count == 1)
             _detailForm.ShowLog(lvLogs.SelectedItems[0].Tag as LogEvent);
+        ResetAutoRefreshTimeoutTimer();
     }
 
     private void btnPageDown_Click(object sender, EventArgs e)
@@ -944,22 +902,26 @@ public partial class Form1 : Form
         if (numPageNumber.Value < 2)
             return;
         numPageNumber.Value -= 1;
+        ResetAutoRefreshTimeoutTimer();
     }
 
     private void btnPageUp_Click(object sender, EventArgs e)
     {
         numPageNumber.Value += 1;
+        ResetAutoRefreshTimeoutTimer();
     }
 
     private void numPageNumber_ValueChanged(object sender, EventArgs e)
     {
         this.LoadLogItems();
+        ResetAutoRefreshTimeoutTimer();
     }
 
     private void btnPurgeLogs_Click(object sender, EventArgs e)
     {
         if (PurgeLogs())
             lvLogs.Items.Clear();
+        ResetAutoRefreshTimeoutTimer();
     }
 
     private void numPageLength_KeyDown(object sender, KeyEventArgs e)
@@ -972,16 +934,12 @@ public partial class Form1 : Form
             this.LoadLogItems();
     }
 
-    private void lvLogs_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
-    }
-
     private void btnRefresh_Click(object sender, EventArgs e)
     {
         RefreshData();
+        ResetAutoRefreshTimeoutTimer();
     }
-    
+
     #region Options
 
     private void btnOptions_Click(object sender, EventArgs e)
